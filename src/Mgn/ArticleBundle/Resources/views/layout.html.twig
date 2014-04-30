@@ -1,0 +1,40 @@
+{% extends "::layout.html.twig" %}
+
+{% set bundle = 'article' %}
+
+{% block title %}{{ Config('siteTitle') }}{% endblock %}
+
+{% block pagetitle %}Articles{% endblock %}
+
+{% block arianne %}
+
+	{{ parent() }}
+	<li><a href="{{ path('mgn_article_archives') }}">Articles</a></li>
+
+{% endblock %}
+
+{% block bundle_article %}
+
+	<div class="row">
+
+		{% for message in app.session.flashbag.get('success') %}
+		<div class="col-lg-12">
+
+			<div class="alert alert-success">
+	        	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+	            {{ message }}
+	        </div>
+
+		</div>
+	    {% endfor %}
+
+		<div class="col-lg-12">
+
+			{% block body %}
+			{% endblock %}
+
+		</div>
+
+	</div>
+
+{% endblock %}

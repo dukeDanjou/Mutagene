@@ -1,0 +1,13 @@
+<h3>Prévisualisation</h3>
+
+{% set url = app.request.schemeAndHttpHost %}
+
+<div class="panel panel-default">
+
+	<div class="panel-body">
+
+	    {{ request|nl2br|parser('parser', type, url)|raw }}
+
+	</div>
+
+</div>

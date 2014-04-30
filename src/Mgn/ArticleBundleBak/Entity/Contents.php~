@@ -1,0 +1,117 @@
+<?php
+
+namespace Mgn\ArticleBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+use Gedmo\Mapping\Annotation as Gedmo;
+
+/**
+ * Contents
+ *
+ * @ORM\Entity
+ * @ORM\Table(name="mgn_article_contents")
+ * @ORM\Entity(repositoryClass="Gedmo\Sortable\Entity\Repository\SortableRepository")
+ * @ORM\Entity(repositoryClass="Mgn\ArticleBundle\Entity\ContentsRepository")
+ * @ORM\HasLifecycleCallbacks()
+ */
+class Contents
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var integer $article
+     *
+     * @Gedmo\SortableGroup
+     * @ORM\ManyToOne(targetEntity="Mgn\ArticleBundle\Entity\Articlenext", inversedBy="contents")
+     */
+    private $article;
+
+    /**
+     * @Gedmo\SortablePosition
+     * @ORM\Column(name="position", type="integer")
+     */
+    private $position;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="paragraph", type="text", nullable=true)
+     */
+    private $paragraph;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=255, nullable=true)
+     */
+    private $title;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="subtitle", type="string", length=255, nullable=true)
+     */
+    private $subtitle;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="picture", type="string", length=255, nullable=true)
+     */
+    private $picture;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="video", type="string", length=255, nullable=true)
+     */
+    private $video;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="quote", type="text", nullable=true)
+     */
+    private $quote;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="quoteName", type="string", length=255, nullable=true)
+     */
+    private $quoteName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="quoteLink", type="string", length=255, nullable=true)
+     */
+    private $quoteLink;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="list", type="text", nullable=true)
+     */
+    private $list;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="listType", type="smallint", nullable=true)
+     */
+    private $listType;
+
+    public function __construct()
+    {
+        $this->position = -1;
+    }
+}

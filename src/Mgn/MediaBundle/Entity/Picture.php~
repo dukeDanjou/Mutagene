@@ -1,0 +1,91 @@
+<?php
+// src/Mgn/MediaBundle/Entity/Picture.php
+namespace Mgn\MediaBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * Image
+ *
+ * @ORM\Entity
+ * @ORM\Table(name="mgn_media_picture")
+ * @ORM\HasLifecycleCallbacks
+ */
+class Picture
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    public $id;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    public $path;
+
+    /**
+     * @Assert\File(maxSize="2M")
+     */
+    public $file;
+
+    /**
+     * @var integer $userUpload
+     *
+     * @ORM\Column(name="userUpload", type="integer", nullable=true)
+     */
+    private $userUpload;
+
+    /**
+     * @var string $userIp
+     *
+     * @ORM\Column(name="userIp", type="string", length=255, nullable=true)
+     */
+    private $userIp;
+
+    /**
+     * @var datetime $date
+     *
+     * @ORM\Column(name="date", type="datetime")
+     */
+    private $date;
+
+    // propriété utilisé temporairement pour le nomage
+    private $userIdForName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    private $description;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=255, nullable=true)
+     */
+    private $title;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="inArticle", type="boolean")
+     */
+    private $inArticle;
+
+    /**
+     * @var integer $gallery
+     *
+     * @ORM\ManyToOne(targetEntity="Mgn\MediaBundle\Entity\Gallery", inversedBy="pictures")
+     */
+    private $gallery;
+
+    public function __construct()
+    {
+        $this->date = new \Datetime();
+        $this->inArticle = false;
+    }
+}

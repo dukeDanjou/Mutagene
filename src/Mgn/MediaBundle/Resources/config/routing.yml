@@ -1,0 +1,25 @@
+mgn_media_picture:
+    pattern:   /medias/get/{name}
+    defaults:  { _controller: MgnMediaBundle:Action:get }
+    requirements:
+        id:  \d+
+
+mgn_admin_media_gallery:
+    pattern:   /admin/medias/galeries
+    defaults:  { _controller: MgnMediaBundle:Admin:gallery }
+
+mgn_admin_media_gallery_edit:
+    pattern:   /admin/medias/galeries/editer/{id}
+    defaults:  { _controller: MgnMediaBundle:Admin:galleryEdit }
+    requirements:
+        id:  \d+
+
+mgn_admin_media_gallery_delete:
+    pattern:   /admin/medias/galeries/supprimer/{id}
+    defaults:  { _controller: MgnMediaBundle:Admin:galleryDelete }
+    requirements:
+        id:  \d+
+
+mgn_admin_media_picture_add:
+    pattern:   /admin/medias/ajouter
+    defaults:  { _controller: MgnMediaBundle:Admin:addPicture }

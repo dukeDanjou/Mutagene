@@ -1,0 +1,91 @@
+{% extends "MgnArticleBundle::layout.html.twig" %}
+
+{% block title %}Les articles - {{ parent() }}{% endblock %}
+
+{% block arianne %}
+
+    {{ parent() }}
+    <li class="active">Index</li>
+
+{% endblock %}
+
+{% block pagetitle %}
+
+    {% if Config('homepage') == 'article' %}
+
+        {{ Config('siteDescription') }}
+
+    {% else %}
+
+        Liste des articles
+
+    {% endif %}
+    
+{% endblock %}
+
+{% block body %}
+
+    {% if Theme('articleBundleArticleIndex') != null %}
+
+        {% include template_from_string(Theme('articleBundleArticleIndex')|raw) %}
+
+    {% else %}
+
+        <div class="row">
+
+            <div class="col-lg-12">
+            
+            {% for article in articles %}
+            
+                <article class="article-index article-category-{{ article.category.slug }}">
+
+                    <div class="row">
+
+                        <div class="col-lg-4">
+
+                            <a href="{{ path('mgn_article_read', {'date': article.date|date('d-m-Y'), 'id': article.id, 'slug': article.slug, 'category': article.category.slug}) }}" class="thumbnail">
+
+                                <img style="max-width: 100%;" src="{{ article.header }}" title="" />
+
+                            </a>
+
+                        </div>
+
+                        <div class="col-lg-8">
+
+                            <h1 style="margin-top: 0px;"><a href="{{ path('mgn_article_read', {'date': article.date|date('d-m-Y'), 'id': article.id, 'slug': article.slug, 'category': article.category.slug}) }}">{{ article.title }}</a></h1>
+
+                            <p style="text-align: justify;">
+                                {{ article.contents | truncate(500, true, '...') }}
+                            </p>
+
+                            <div class="article-index-footer">
+                                <i class="fa fa-calendar"></i> {{ article.date|datetime|capitalize }} 
+                                <i class="fi-torso"></i> Par <a href="{{ path('mgn_user_profile', {'username': article.author.usernameCanonical}) }}">{{ article.author.username }}</a> 
+                                <i class="fa fa-folder-open"></i> <a href="{{ path('mgn_article_archives', {'filtre': article.category.slug}) }}">{{ article.category.name }}</a> 
+                                <i class="fa fa-comments"></i> <a  href="{{ path('mgn_article_read', {'date': article.date|date('d-m-Y'), 'id': article.id, 'slug': article.slug, 'category': article.category.slug}) }}#comments">{{ article.countComments }} {% if article.countComments <= 1 %}Commentaire{% else %}Commentaires{% endif %}</a>
+                            </div>
+
+                        </div>
+                    
+                    </div>
+
+                </article>
+                    
+            {% else %}
+               
+                <div class="alert alert-info">
+
+                    Aucun article n'a été rédigé sur ce site.
+
+                </div>
+            
+            {% endfor %}
+
+            </div>
+
+        </div>
+
+    {% endif %}
+    
+{% endblock %}

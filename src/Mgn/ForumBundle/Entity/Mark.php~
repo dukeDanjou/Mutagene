@@ -1,0 +1,44 @@
+<?php
+
+namespace Mgn\ForumBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Mgn\ForumBundle\Entity\Mark
+ *
+ * @ORM\Table(name="mgn_forum_mark")
+ * @ORM\Entity(repositoryClass="Mgn\ForumBundle\Entity\MarkRepository")
+ */
+class Mark
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var integer $user
+     *
+     * @ORM\ManyToOne(targetEntity="Mgn\UserBundle\Entity\User")
+     */
+    private $user;
+
+    /**
+     * @var integer $forum
+     *
+     * @ORM\ManyToOne(targetEntity="Mgn\ForumBundle\Entity\Forum")
+     */
+    private $forum;
+
+    /**
+     * @var datetime $date
+     *
+     * @ORM\Column(name="date", type="datetime")
+     */
+    private $date;
+}

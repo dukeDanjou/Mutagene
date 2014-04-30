@@ -1,0 +1,224 @@
+{% extends "MgnCoreBundle::admin.html.twig" %}
+
+{% block title %}
+    Gestion des acl's pour {{ user.username }} - {{ parent() }}
+{% endblock %}
+
+{% block arianne %}
+    {{ parent() }}<li>
+                            Gestion des acl's pour {{ user.username }}
+{% endblock %}
+
+{% block sidebar_core %}active{% endblock %}
+{% block sidebar_core_acls %}select{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+
+        <div class="col-lg-12">
+
+            <div class="page-header">
+                <h1>
+                    <i class="fi-widget"></i> Gestion des acl's pour {{ user.username }}
+                </h1>
+            </div>
+
+        </div>
+
+        <div class="col-lg-12">
+
+            <table class="table table-hover">
+
+                {% set category = '' %}
+
+                {% for forum in forums %}
+
+                    {% if category != forum.category.name %}
+                    
+                        {% set category = forum.category.name %}
+                        
+                        <thead>
+                            <tr>
+                                <th>
+                                    {{ forum.category.name|upper }}
+                                </th>
+                                <th>Lire</th>
+                                <th>Message</th>
+                                <th>Sujet</th>
+                                <th>Base</th>
+                                <th>Fermer</th>
+                                <th>Epingler</th>
+                                <th>Annonce</th>
+                                <th>Déplacer</th>
+                                <th>Modo</th>
+                                <th>Editer</th>
+                                <th>Supprimer</th>
+                                <th>Admin</th>
+                            </tr>
+                        </thead>
+                        
+                    {% endif %}
+
+                    <tbody>
+                        
+                            <tr>
+                                <td>
+                                    <p><a href="{{ path('mgn_forum_view', {'id': forum.id, 'forum': forum.slug}) }}"><strong>{{ forum.name }}</strong></a></p>
+                                    <em>{{ forum.description }}</em>
+                                </td>
+                                <td>
+                                    {% if user.hasRole('ROLE_FORUM_READ_'~forum.id) %}
+                                        <a href="{{ path('mgn_admin_core_acls_forUser_role', {'userId': user.id, 'usernameCanonical': user.usernameCanonical, 'role': 'read', 'forumId': forum.id}) }}"><i class="fa fa-check-square-o"></i></a>
+                                    {% else %}
+                                        <a href="{{ path('mgn_admin_core_acls_forUser_role', {'userId': user.id, 'usernameCanonical': user.usernameCanonical, 'role': 'read', 'forumId': forum.id}) }}"><i class="fa fa-square-o"></i></a>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if user.hasRole('ROLE_FORUM_POST_'~forum.id) %}
+                                        <a href="{{ path('mgn_admin_core_acls_forUser_role', {'userId': user.id, 'usernameCanonical': user.usernameCanonical, 'role': 'post', 'forumId': forum.id}) }}"><i class="fa fa-check-square-o"></i></a>
+                                    {% else %}
+                                        <a href="{{ path('mgn_admin_core_acls_forUser_role', {'userId': user.id, 'usernameCanonical': user.usernameCanonical, 'role': 'post', 'forumId': forum.id}) }}"><i class="fa fa-square-o"></i></a>
+                                    {% endif %}</i>
+                                </td>
+                                <td>
+                                    {% if user.hasRole('ROLE_FORUM_TOPIC_'~forum.id) %}
+                                        <a href="{{ path('mgn_admin_core_acls_forUser_role', {'userId': user.id, 'usernameCanonical': user.usernameCanonical, 'role': 'topic', 'forumId': forum.id}) }}"><i class="fa fa-check-square-o"></i></a>
+                                    {% else %}
+                                        <a href="{{ path('mgn_admin_core_acls_forUser_role', {'userId': user.id, 'usernameCanonical': user.usernameCanonical, 'role': 'topic', 'forumId': forum.id}) }}"><i class="fa fa-square-o"></i></a>
+                                    {% endif %}</i>
+                                </td>
+                                <td>
+                                    {% if user.hasRole('ROLE_FORUM_READ_'~forum.id) and user.hasRole('ROLE_FORUM_POST_'~forum.id) and user.hasRole('ROLE_FORUM_TOPIC_'~forum.id) %}
+                                        <a href="{{ path('mgn_admin_core_acls_forUser_role', {'userId': user.id, 'usernameCanonical': user.usernameCanonical, 'role': 'base', 'forumId': forum.id}) }}"><i class="fa fa-check-square-o"></i></a>
+                                    {% else %}
+                                        <a href="{{ path('mgn_admin_core_acls_forUser_role', {'userId': user.id, 'usernameCanonical': user.usernameCanonical, 'role': 'base', 'forumId': forum.id}) }}"><i class="fa fa-square-o"></i></a>
+                                    {% endif %}</i>
+                                </td>
+                                <td>
+                                    {% if user.hasRole('ROLE_FORUM_LOCK_'~forum.id) %}
+                                        <a href="{{ path('mgn_admin_core_acls_forUser_role', {'userId': user.id, 'usernameCanonical': user.usernameCanonical, 'role': 'lock', 'forumId': forum.id}) }}"><i class="fa fa-check-square-o"></i></a>
+                                    {% else %}
+                                        <a href="{{ path('mgn_admin_core_acls_forUser_role', {'userId': user.id, 'usernameCanonical': user.usernameCanonical, 'role': 'lock', 'forumId': forum.id}) }}"><i class="fa fa-square-o"></i></a>
+                                    {% endif %}</i>
+                                </td>
+                                <td>
+                                    {% if user.hasRole('ROLE_FORUM_POSTIT_'~forum.id) %}
+                                        <a href="{{ path('mgn_admin_core_acls_forUser_role', {'userId': user.id, 'usernameCanonical': user.usernameCanonical, 'role': 'postit', 'forumId': forum.id}) }}"><i class="fa fa-check-square-o"></i></a>
+                                    {% else %}
+                                        <a href="{{ path('mgn_admin_core_acls_forUser_role', {'userId': user.id, 'usernameCanonical': user.usernameCanonical, 'role': 'postit', 'forumId': forum.id}) }}"><i class="fa fa-square-o"></i></a>
+                                    {% endif %}</i>
+                                </td>
+                                <td>
+                                    {% if user.hasRole('ROLE_FORUM_ANNONCE_'~forum.id) %}
+                                        <a href="{{ path('mgn_admin_core_acls_forUser_role', {'userId': user.id, 'usernameCanonical': user.usernameCanonical, 'role': 'annonce', 'forumId': forum.id}) }}"><i class="fa fa-check-square-o"></i></a>
+                                    {% else %}
+                                        <a href="{{ path('mgn_admin_core_acls_forUser_role', {'userId': user.id, 'usernameCanonical': user.usernameCanonical, 'role': 'annonce', 'forumId': forum.id}) }}"><i class="fa fa-square-o"></i></a>
+                                    {% endif %}</i>
+                                </td>
+                                <td>
+                                    {% if user.hasRole('ROLE_FORUM_MOVE_'~forum.id) %}
+                                        <a href="{{ path('mgn_admin_core_acls_forUser_role', {'userId': user.id, 'usernameCanonical': user.usernameCanonical, 'role': 'move', 'forumId': forum.id}) }}"><i class="fa fa-check-square-o"></i></a>
+                                    {% else %}
+                                        <a href="{{ path('mgn_admin_core_acls_forUser_role', {'userId': user.id, 'usernameCanonical': user.usernameCanonical, 'role': 'move', 'forumId': forum.id}) }}"><i class="fa fa-square-o"></i></a>
+                                    {% endif %}</i>
+                                </td>
+                                <td>
+                                    {% if user.hasRole('ROLE_FORUM_LOCK_'~forum.id) and user.hasRole('ROLE_FORUM_POSTIT_'~forum.id) and user.hasRole('ROLE_FORUM_ANNONCE_'~forum.id) and user.hasRole('ROLE_FORUM_MOVE_'~forum.id) %}
+                                        <a href="{{ path('mgn_admin_core_acls_forUser_role', {'userId': user.id, 'usernameCanonical': user.usernameCanonical, 'role': 'modo', 'forumId': forum.id}) }}"><i class="fa fa-check-square-o"></i></a>
+                                    {% else %}
+                                        <a href="{{ path('mgn_admin_core_acls_forUser_role', {'userId': user.id, 'usernameCanonical': user.usernameCanonical, 'role': 'modo', 'forumId': forum.id}) }}"><i class="fa fa-square-o"></i></a>
+                                    {% endif %}</i>
+                                </td>
+                                <td>
+                                    {% if user.hasRole('ROLE_FORUM_EDIT_'~forum.id) %}
+                                        <a href="{{ path('mgn_admin_core_acls_forUser_role', {'userId': user.id, 'usernameCanonical': user.usernameCanonical, 'role': 'edit', 'forumId': forum.id}) }}"><i class="fa fa-check-square-o"></i></a>
+                                    {% else %}
+                                        <a href="{{ path('mgn_admin_core_acls_forUser_role', {'userId': user.id, 'usernameCanonical': user.usernameCanonical, 'role': 'edit', 'forumId': forum.id}) }}"><i class="fa fa-square-o"></i></a>
+                                    {% endif %}</i>
+                                </td>
+                                <td>
+                                    {% if user.hasRole('ROLE_FORUM_DELETE_'~forum.id) %}
+                                        <a href="{{ path('mgn_admin_core_acls_forUser_role', {'userId': user.id, 'usernameCanonical': user.usernameCanonical, 'role': 'delete', 'forumId': forum.id}) }}"><i class="fa fa-check-square-o"></i></a>
+                                    {% else %}
+                                        <a href="{{ path('mgn_admin_core_acls_forUser_role', {'userId': user.id, 'usernameCanonical': user.usernameCanonical, 'role': 'delete', 'forumId': forum.id}) }}"><i class="fa fa-square-o"></i></a>
+                                    {% endif %}</i>
+                                </td>
+                                <td>
+                                    {% if user.hasRole('ROLE_FORUM_EDIT_'~forum.id) and user.hasRole('ROLE_FORUM_DELETE_'~forum.id) %}
+                                        <a href="{{ path('mgn_admin_core_acls_forUser_role', {'userId': user.id, 'usernameCanonical': user.usernameCanonical, 'role': 'admin', 'forumId': forum.id}) }}"><i class="fa fa-check-square-o"></i></a>
+                                    {% else %}
+                                        <a href="{{ path('mgn_admin_core_acls_forUser_role', {'userId': user.id, 'usernameCanonical': user.usernameCanonical, 'role': 'admin', 'forumId': forum.id}) }}"><i class="fa fa-square-o"></i></a>
+                                    {% endif %}</i>
+                                </td>
+                            </tr>           
+                    </tbody>
+
+                {% endfor %}
+
+            </table>
+
+        </div>
+
+        <div class="col-lg-12">
+
+            <div class="well" id="descriptif">
+                <p>
+                    Description des différents acls :
+                </p>
+
+                <dl>
+                    <dt>Lire</dt>
+                    <dd>Permet au groupe de voir la catégorie et de lire les sujets et messages.</dd>
+                </dl>
+                <dl>
+                    <dt>Message</dt>
+                    <dd>Permet au groupe de poster des messages dans les différents sujets.</dd>
+                </dl>
+                <dl>
+                    <dt>Sujet</dt>
+                    <dd>Permet au groupe de poster de nouveaux sujets.</dd>
+                </dl>
+                <dl>
+                    <dt>Base</dt>
+                    <dd>Active ou désactive lire, message et sujet.</dd>
+                </dl>
+                <dl>
+                    <dt>Fermer</dt>
+                    <dd>Autorise le groupe à vérouiller un sujet ou des messages de la catégorie.</dd>
+                </dl>
+                <dl>
+                    <dt>Epingler</dt>
+                    <dd>Autorise le groupe à épingler un sujet dans la catégorie.</dd>
+                </dl>
+                <dl>
+                    <dt>Annonce</dt>
+                    <dd>Autorise le groupe à publier une annonce dans cette catégorie.</dd>
+                </dl>
+                <dl>
+                    <dt>Déplacer</dt>
+                    <dd>Permet au groupe de déplacer un sujet dans une autre catégorie, seulement dans celle dont il à le droit de LIRE.</dd>
+                </dl>
+                <dl>
+                    <dt>Modo</dt>
+                    <dd>Active ou désactive fermer, epingler, annonce et déplacer.</dd>
+                </dl>
+                <dl>
+                    <dt>Editer</dt>
+                    <dd>Autorise le groupe à éditer les messages et les titres des sujets.</dd>
+                </dl>
+                <dl>
+                    <dt>Supprimer</dt>
+                    <dd>Permet au groupe de supprimer des messages ou des sujets complets.</dd>
+                </dl>
+                <dl>
+                    <dt>Admin</dt>
+                    <dd>Active ou désactive editer et supprimer.</dd>
+                </dl>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}

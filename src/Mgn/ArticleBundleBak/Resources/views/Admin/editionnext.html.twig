@@ -1,0 +1,149 @@
+{% extends "MgnArticleBundle::admin.html.twig" %}
+
+{% block title %}
+    Rédaction d'un article - {{ parent() }}
+{% endblock %}
+
+{% block sidebar_articles %}active{% endblock %}
+{% block sidebar_articles_writenext %}active{% endblock %}
+
+{% block body %}
+
+	<div class="row">
+
+		<div class="col-lg-12">
+
+			<section class="panel">
+
+				<header class="panel-heading">
+
+					<h4><i class="fi-pencil"></i> Rédaction d'un article</h4>
+
+				</header>
+
+				<div class="panel-body">
+
+					{% for message in app.session.flashbag.get('success') %}
+					<div class="col-lg-12">
+				        <div class="alert alert-success">
+				        	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				            {{ message }}
+				        </div>
+			        </div>
+			        {% endfor %}
+
+			        {% include "MgnArticleBundle:Forms:articlenext.html.twig" %}
+
+				</div>
+
+			</section>
+
+	        <div class="row">
+
+	            <div class="col-lg-12">
+
+	                <div id="contents-load" data-path="{{path('mgn_admin_article_contents_sortable')}}">
+	                	
+	                	{% for content in article.contents %}
+
+	                		{% if content.paragraph != null %}
+
+								{% include "MgnArticleBundle:Contents:paragraph.html.twig" %}
+
+							{% elseif content.title != null %}
+
+								{% include "MgnArticleBundle:Contents:title.html.twig" %}
+
+							{% elseif content.subtitle != null %}
+
+								{% include "MgnArticleBundle:Contents:subtitle.html.twig" %}
+
+							{% elseif content.picture != null %}
+
+								{% include "MgnArticleBundle:Contents:picture.html.twig" %}
+
+							{% endif %}
+
+	                	{% endfor %}
+
+	                </div>
+
+	            </div>
+
+	        </div>
+
+	        <div class="row">
+
+	            <div class="col-lg-12">
+
+	                <div class="contents-add panel panel-default text-center" style="height: 90px;">
+
+	                    <div class="panel-body">
+
+	                        <div class="contents-add-out"><i class="fa fa-plus fa-2x text-info" style="margin-top: 15px;"></i></div>
+
+	                        <div class="contents-add-over">
+
+	                            <button type="button" class="btn btn-primary">
+	                                <span class="fa fa-text-height fa-2x"></span> Titre
+	                            </button>
+
+	                            <button type="button" class="btn btn-primary">
+	                                <span class="fa fa-text-height fa-2x"></span> Sous-titre
+	                            </button>
+
+	                            <a type="button" class="btn btn-primary contents-add-link" href="{{ url('mgn_admin_article_contents', {'article': article.id, 'content': 'new', 'type': 'paragraph'})}}">
+	                                <span class="fa fa-pencil fa-2x"></span> Paragraphe
+	                            </a>
+
+	                            <button type="button" class="btn btn-primary">
+	                                <span class="fa fa-picture-o fa-2x"></span> Image
+	                            </button>
+
+	                            <button type="button" class="btn btn-primary">
+	                                <span class="fa fa-film fa-2x"></span> Vidéo
+	                            </button>
+
+	                            <button type="button" class="btn btn-primary">
+	                                <span class="fa fa-quote-right fa-2x"></span> Citation
+	                            </button>
+
+	                            <button type="button" class="btn btn-primary">
+	                                <span class="fa fa-list-ul fa-2x"></span> Liste
+	                            </button>
+
+	                        </div>
+
+	                    </div>
+
+	                </div>
+
+	            </div>
+
+	        </div>
+
+	        <div class="row">
+
+	            <div class="col-lg-12">
+
+	                <div class="pull-right">
+
+		                <button type="button" class="btn btn-primary btn-lg">
+		                    Sauvegarder
+		                </button>
+
+		                <button type="button" class="btn btn-success btn-lg">
+		                    Publier
+		                </button>
+
+	                </div>
+
+	            </div>
+
+	        </div>
+
+		</div>
+
+	</div>
+
+{% endblock %}

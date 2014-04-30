@@ -1,0 +1,71 @@
+mgn_core_view:
+    pattern:   /core/view/{type}
+    defaults:  { _controller: MgnCoreBundle:View:index }
+
+mgn_admin_core_parameters:
+    pattern:   /admin/site/parametres
+    defaults:  { _controller: MgnCoreBundle:Site:parameters }
+
+mgn_admin_core_modules:
+    pattern:   /admin/site/modules
+    defaults:  { _controller: MgnCoreBundle:Site:modules }
+
+mgn_admin_core_acls:
+    pattern:   /admin/acls
+    defaults:  { _controller: MgnCoreBundle:Acl:Acls, groupId: null, groupSlug: null, role: null, forumId: null }
+
+mgn_admin_core_acls_forGroup:
+    pattern:   /admin/acls/for-group-{groupId}/{groupSlug}
+    defaults:  { _controller: MgnCoreBundle:Acl:Acls, role: null, forumId: null }
+    requirements:
+        groupId:  \d+
+
+mgn_admin_core_acls_forGroup_role:
+    pattern:   /admin/acls/for-group-{groupId}/{groupSlug}/role-{role}/{forumId}
+    defaults:  { _controller: MgnCoreBundle:Acl:Acls }
+    requirements:
+        groupId:  \d+
+        forumId:  \d+
+
+mgn_admin_core_acls_forUser:
+    pattern:   /admin/acls/for-user-{userId}/{usernameCanonical}
+    defaults:  { _controller: MgnCoreBundle:Acl:AclsUser, role: null, forumId: null }
+    requirements:
+        groupId:  \d+
+
+mgn_admin_core_acls_forUser_role:
+    pattern:   /admin/acls/for-user-{userId}/{usernameCanonical}/role-{role}/{forumId}
+    defaults:  { _controller: MgnCoreBundle:Acl:AclsUser }
+    requirements:
+        userId:  \d+
+        forumId:  \d+
+
+mgn_admin_core_acls_forForum:
+    pattern:   /admin/acls/for-forum-{forumId}/{forumSlug}
+    defaults:  { _controller: MgnCoreBundle:Acl:AclsForum, role: null, forumId: null }
+    requirements:
+        groupId:  \d+
+
+mgn_core_admin_themes:
+    pattern:   /admin/themes
+    defaults:  { _controller: MgnCoreBundle:Theme:list }
+
+mgn_core_admin_editor_head:
+    pattern:   /admin/themes/editeur/{theme}/head
+    defaults:  { _controller: MgnCoreBundle:Theme:editorHead }
+
+mgn_core_admin_editor_layout:
+    pattern:   /admin/themes/editeur/{theme}/layout.html.twig
+    defaults:  { _controller: MgnCoreBundle:Theme:editorLayout }
+
+mgn_core_admin_editor_javascript:
+    pattern:   /admin/themes/editeur/{theme}/javascript
+    defaults:  { _controller: MgnCoreBundle:Theme:editorJavascript }
+
+mgn_core_admin_editor_menu:
+    pattern:   /admin/themes/editeur/{theme}/menu.html.twig
+    defaults:  { _controller: MgnCoreBundle:Theme:editorMenu }
+
+mgn_core_admin_editor:
+    pattern:   /admin/themes/editeur/{theme}/{file}
+    defaults:  { _controller: MgnCoreBundle:Theme:editor }

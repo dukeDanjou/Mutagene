@@ -1,0 +1,21 @@
+{% extends "MgnForumBundle::layout.html.twig" %}
+
+{% block title %}
+	Sujet inexistant ! - {{ parent() }}
+{% endblock %}
+
+{% block arianne %}
+	{{ parent() }}
+						</li>
+						<li class="active">
+							Sujet inexistant !
+{% endblock %}
+
+{% block body_forum %}
+
+	<div class="alert alert-danger">
+		<strong>Erreur : </strong>
+		Le sujet demandé n'as pas été trouvé !
+	</div>
+    
+{% endblock %}

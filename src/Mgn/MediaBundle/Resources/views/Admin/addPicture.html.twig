@@ -1,0 +1,118 @@
+{% extends "MgnArticleBundle::admin.html.twig" %}
+
+{% block title %}
+    Ajouter une image - {{ parent() }}
+{% endblock %}
+
+{% block sidebar_medias %}active{% endblock %}
+{% block sidebar_medias_add %}select{% endblock %}
+
+{% block body %}
+
+	<div class="row">
+	
+		<div class="col-lg-12">
+
+			<div class="page-header">
+
+				<h1><i class="fi-pencil"></i> Ajouter une image</h1>
+
+			</div>
+
+		</div>
+
+		{% for message in app.session.flashbag.get('error') %}
+		<div class="col-lg-12">
+	        <div class="alert alert-error">
+	        	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+	            {{ message }}
+	        </div>
+        </div>
+        {% endfor %}
+
+		{% for message in app.session.flashbag.get('success') %}
+		<div class="col-lg-12">
+	        <div class="alert alert-success">
+	        	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+	            {{ message }}
+	        </div>
+        </div>
+        {% endfor %}
+
+        <div class="col-lg-12">
+
+        	<form name="" role="form" method="post" {{ form_enctype(form) }} class="form-horizontal">
+
+        		<div class="form-group{% if form_errors(form.file) %} has-error{% endif %}">
+
+					<label for="mgn_userbundle_grouptype_name" class="col-lg-2 control-label">Image</label>
+
+					<div class="col-lg-8">
+
+						{{ form_widget(form.file) }}
+
+					</div>
+
+					<div class="col-lg-8">
+
+						<p class="help-block"><strong>Extension :</strong> .jpg, .jpeg, .bmp, .png, .gif</p>
+
+					</div>
+
+				</div>
+
+				<div class="form-group{% if form_errors(form.gallery) %} has-error{% endif %}">
+
+					<label for="mgn_userbundle_grouptype_url" class="col-lg-2 control-label">Galerie</label>
+
+					<div class="col-lg-8">
+
+						{{ form_widget(form.gallery, { 'attr' : { 'class' : 'form-control' } }) }}
+
+					</div>
+
+				</div>
+
+				<div class="form-group{% if form_errors(form.title) %} has-error{% endif %}">
+
+					<label for="mgn_userbundle_grouptype_url" class="col-lg-2 control-label">Titre</label>
+
+					<div class="col-lg-8">
+
+						{{ form_widget(form.title, { 'attr' : { 'class' : 'form-control' } }) }}
+
+					</div>
+
+				</div>
+
+				<div class="form-group{% if form_errors(form.description) %} has-error{% endif %}">
+
+					<label for="mgn_userbundle_grouptype_description" class="col-lg-2 control-label">Description</label>
+
+					<div class="col-lg-8">
+
+						{{ form_widget(form.description, { 'attr' : { 'class' : 'form-control', 'rows' : '5' } }) }}
+
+					</div>
+
+				</div>
+
+        		{{ form_rest(form) }}
+
+        		<div class="form-actions">
+
+					<div class="col-lg-offset-2 col-lg-8">
+
+	                	<button type="submit" class="btn btn-primary">Ajouter</button>
+
+	                </div>
+
+	            </div>
+
+        	</form>
+
+        </div>
+
+	</div>
+
+{% endblock %}

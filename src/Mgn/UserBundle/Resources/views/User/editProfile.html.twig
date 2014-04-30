@@ -1,0 +1,307 @@
+{% extends "MgnUserBundle::layout.html.twig" %}
+
+{% block title %}{{ app.user.username }} - Modifier - {{ parent() }}{% endblock %}
+
+{% block arianne %}
+
+	{{ parent() }}
+	<li><a href="{{ path('mgn_user_profile', {'username': app.user.usernameCanonical}) }}">{{ app.user.username }}</a></li>
+	<li class="active">Modifier</li>
+
+{% endblock %}
+
+{% block pagetitle %}
+
+    Mon compte
+    
+{% endblock %}
+
+{% block body %}
+
+	<div class="row">
+
+		{% for message in app.session.flashbag.get('success') %}
+    	<div class="col-lg-12">
+
+            <div class="alert alert-success">
+            	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                {{ message }}
+            </div>
+            
+        </div>
+        {% endfor %}
+
+		{% for message in app.session.flashbag.get('info') %}
+    	<div class="col-lg-12">
+
+            <div class="alert alert-info">
+            	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                {{ message }}
+            </div>
+            
+        </div>
+        {% endfor %}
+
+		<div class="col-lg-12">
+
+			<ul class="nav nav-tabs">
+
+				<li><a href="{{ path('mgn_user_profile', {'username': user.usernameCanonical}) }}">Profil</a></li>
+				<li class="active"><a href="{{ path("mgn_user_edit_profile", {'username': user.usernameCanonical}) }}">Modifier</a></li>
+				<li><a href="{{ path("mgn_user_edit_parameters", {'username': user.usernameCanonical}) }}">Paramètres</a></li>
+
+			</ul>
+
+		</div>
+
+		<div class="col-lg-12" style="margin-top: 30px;">
+
+			<form method="post" {{ form_enctype(form) }} class="form-horizontal">
+
+			{% if Config('profileFirstName') == true or Config('profileLastName') == true or Config('profileBirthday') == true %}
+			<fieldset>
+				<legend>Informations général</legend>
+
+				<div class="form-group">
+					<label class="col-lg-3 control-label" for="disabledInput">Avatar</label>
+					<div class="col-lg-2">
+						<a data-toggle="modal" href="#avatarModal">
+							{{ app.user.avatar|avatar(app.user.avatarPath, app.user.email, '100', 'thumbnail')|raw }}
+						</a>
+					</div>
+					<div class="col-lg-9 col-md-offset-3">
+						<p class="help-block">
+							<strong>Modification: </strong>
+							Cliquez sur l'avatar
+						</p>
+					</div>
+				</div>
+
+				<div class="modal fade" id="avatarModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				    <div class="modal-dialog">
+				      <div class="modal-content">
+				        <div class="modal-header">
+				          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				          <h4 class="modal-title">Changer votre avatar</h4>
+				        </div>
+				        <div class="modal-body">
+
+				        	<div class="row">
+
+							<div class="col-lg-4 text-center">
+									<img src="{{ asset('themes/'~Config('theme')~'/img/avatar.png') }}" title="Avatar par default" />
+							</div>
+							<div class="col-lg-4 text-center">
+								{% if gravatar_exists(app.user.email) %}
+									<img src="{{ gravatar(app.user.email) }}" title="Avatar de {{ app.user.username }}" /> 
+								{% endif %}
+							</div>
+							<div class="col-lg-4 text-center">
+								{% if app.user.avatarPath != null %}
+									<img src="{{ asset('uploads/avatars/') }}{{ app.user.avatarPath }}" title="" />
+							    {% endif %}
+							</div>
+
+							</div>
+
+							<div class="row">
+
+							<div class="col-lg-4 text-center">
+								{{ form_widget(form.avatar.0) }}
+								Défault
+						    </div>
+							<div class="col-lg-4 text-center">
+								{% if gravatar_exists(app.user.email) %}
+								{{ form_widget(form.avatar.1) }}
+							    <a href="http://fr.gravatar.com/" target="_blank">Gravatar</a>
+							    {% else %}
+							    <fieldset disabled>
+								{{ form_widget(form.avatar.1) }}
+							    <a href="http://fr.gravatar.com/" target="_blank">Gravatar</a>
+							    </fieldset>
+							    {% endif %}
+						    </div>
+							<div class="col-lg-4 text-center">
+								{% if app.user.avatarPath != null %}
+							    {{ form_widget(form.avatar.2) }}
+							    Personnalisé
+								{% else %}
+							    <fieldset disabled>
+							    {{ form_widget(form.avatar.2) }}
+							    Personnalisé
+							    </fieldset>
+							    {% endif %}
+							</div>
+
+							</div>
+
+							<div class="row">
+
+								<div class="col-lg-12" style="margin-top: 20px;">
+
+								Uploader un nouvel avatar
+
+								{{ form_widget(form.avatarFile, { 'attr' : { 'class' : 'btn' } }) }}
+
+								<p class="help-block">
+									<strong>Taille: </strong>
+									150 px * 150 px
+								</p>
+
+								</div>
+
+							</div>
+
+							</div>
+				        <div class="modal-footer">
+				          <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+				          <button class="btn btn-primary" type="submit" id="_submit" name="_submit">Appliquer</button>
+				        </div>
+				      </div><!-- /.modal-content -->
+				    </div><!-- /.modal-dialog -->
+				  </div><!-- /.modal -->
+
+				{% if Config('profileFirstName') == true %}
+				<div class="form-group{% if form_errors(form.firstName) %} has-error{% endif %}">
+					<label class="col-lg-3 control-label" for="fos_user_registration_form_firstName">Prénom</label>
+					<div class="col-lg-6">
+						{{ form_widget(form.firstName, { 'attr' : { 'class' : 'form-control' } }) }}
+					</div>
+				</div>
+				{% endif %}
+
+				{% if Config('profileLastName') == true %}
+				<div class="form-group{% if form_errors(form.lastName) %} has-error{% endif %}">
+					<label class="col-lg-3 control-label" for="fos_user_registration_form_lastName">Nom</label>
+					<div class="col-lg-6">
+						{{ form_widget(form.lastName, { 'attr' : { 'class' : 'form-control' } }) }}
+					</div>
+				</div>
+				{% endif %}
+
+				{% if Config('profileBirthday') == true %}
+		   		<div class="form-group">
+					<label class="col-lg-3 control-label" for="birthday">Date de naissance</label>
+					<div class="col-lg-2">
+
+						{{ form_widget(form.birthday, { 'attr' : { 'class' : 'form-control datepicker', 'data-date-format' : 'dd/mm/yyyy' } }) }}
+
+						<p class="help-block">
+							<strong>Format:</strong>
+							Jour / Mois / Année
+						</p>
+					</div>
+				</div>
+				{% endif %}
+
+			</fieldset>
+			{% endif %}
+
+			{% if Config('profileTwitter') == true or Config('profileFacebook') == true or Config('profileGoogleplus') == true or Config('profileSteam') == true %}
+			<fieldset>
+				<legend>Réseaux sociaux</legend>
+
+				{% if Config('profileTwitter') == true %}
+				<div class="form-group{% if form_errors(form.twitter) %} has-error{% endif %}">
+					<label class="col-lg-3 control-label" for="fos_user_registration_form_twitter">Twitter</label>
+					<div class="col-lg-6">
+						<div class="input-group">
+							<span class="input-group-addon">https://twitter.com/</span>
+							{{ form_widget(form.twitter, { 'attr' : { 'class' : 'form-control' } }) }}
+						</div>
+						<span class="help-block">
+							<a href="https://twitter.com/settings/account" target="_blank">Modifier mon nom d'utilisateur Twitter</a>
+						</span>
+					</div>
+				</div>
+				{% endif %}
+
+				{% if Config('profileFacebook') == true %}
+				<div class="form-group{% if form_errors(form.facebook) %} has-error{% endif %}">
+					<label class="col-lg-3 control-label" for="fos_user_registration_form_facebook">Facebook</label>
+					<div class="col-lg-6">
+						<div class="input-group">
+							<span class="input-group-addon">http://www.facebook.com/</span>
+							{{ form_widget(form.facebook, { 'attr' : { 'class' : 'form-control' } }) }}
+						</div>
+						<span class="help-block">
+							<a href="https://www.facebook.com/settings?tab=account&section=username&view" target="_blank">Modifier mon nom d'utilisateur Facebook</a>
+						</span>
+					</div>
+				</div>
+				{% endif %}
+
+				{% if Config('profileGoogleplus') == true %}
+				<div class="form-group{% if form_errors(form.googleplus) %} has-error{% endif %}">
+					<label class="col-lg-3 control-label" for="fos_user_registration_form_googleplus">Google plus</label>
+					<div class="col-lg-6">
+						<div class="input-group">
+							<span class="input-group-addon">https://plus.google.com/</span>
+							{{ form_widget(form.googleplus, { 'attr' : { 'class' : 'form-control' } }) }}
+						</div>
+						<span class="help-block">
+							<a href="https://www.google.com/settings/personalinfo" target="_blank">Modifier l'url Google Plus</a>
+						</span>
+					</div>
+				</div>
+				{% endif %}
+
+				{% if Config('profileSteam') == true %}
+				<div class="form-group{% if form_errors(form.steam) %} has-error{% endif %}">
+					<label class="col-lg-3 control-label" for="fos_user_registration_form_steam">Steam</label>
+					<div class="col-lg-6">
+						<div class="input-group">
+							<span class="input-group-addon">http://steamcommunity.com/id/</span>
+							{{ form_widget(form.steam, { 'attr' : { 'class' : 'form-control' } }) }}
+						</div>
+						<span class="help-block">
+							<a href="http://steamcommunity.com/id/knokoss/edit" target="_blank">Modifier l'url perso Steam</a>
+						</span>
+					</div>
+				</div>
+				{% endif %}
+
+			</fieldset>
+			{% endif %}
+
+			{% if Config('profileSignature') == true %}
+			<fieldset>
+				<legend>Forum</legend>
+
+		    	{% if Config('profileSignature') == true %}
+				<div class="form-group">
+					<label class="col-lg-3 control-label" for="prenom">Signature</label>
+					<div class="col-lg-9">
+						
+						{{ form_widget(form.signature, { 'attr' : { 'class' : 'form-control', 'rows' : '10' } }) }}
+					</div>
+				</div>
+				{% endif %}
+
+			</fieldset>
+			{% endif %}
+
+			{{ form_widget(form) }}
+
+			<div class="form-group">
+				<div class="col-lg-offset-3 col-lg-6">
+					<button class="btn btn-primary" type="submit" id="_submit" name="_submit">Enregistrer</button>
+					<a class="btn btn-default" href="{{ path('mgn_user_edit_profile', {'username': user.usernameCanonical}) }}">Annuler les changements</a>
+				</div>
+			</div>
+
+		</form>
+		</section>
+
+
+		<script type="text/javascript">
+		<!--
+		$('.datepicker').datepicker();
+		-->
+		</script>
+
+		</div>
+
+	</div>
+
+{% endblock %}

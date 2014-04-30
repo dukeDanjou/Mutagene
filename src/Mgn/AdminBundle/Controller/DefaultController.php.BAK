@@ -1,0 +1,26 @@
+<?php
+
+namespace Mgn\AdminBundle\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+class DefaultController extends Controller
+{
+    public function indexAction()
+    {
+    	$config = $this->container->get('mgn.config');
+
+    	if ( $this->get('templating')->exists('MgnThemeBundle:'.$config->get('theme').':edition.html.twig') )
+    	{
+    		$test = 'exist';
+    	}
+    	else
+    	{
+    		$test = 'MgnThemeBundle:'.$config->get('theme').':edition.html.twig';
+    	}
+
+        return $this->render('MgnAdminBundle:Default:index.html.twig', array(
+        	'test' => $test,
+        ));
+    }
+}

@@ -1,0 +1,263 @@
+{% extends "MgnCoreBundle::admin.html.twig" %}
+
+{% block title %}
+    Paramètres du site - {{ parent() }}
+{% endblock %}
+
+{% block arianne %}
+    {{ parent() }}<li>
+                            Paramètres du site
+{% endblock %}
+
+{% block sidebar_core %}active{% endblock %}
+{% block sidebar_core_parameters %}select{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+
+        <div class="col-lg-12">
+
+            <div class="page-header">
+                <h1>
+                    <i class="fi-widget"></i> Paramètres du site
+                </h1>
+            </div>
+
+        </div>
+
+        <div class="col-lg-12">
+
+            <div class="alert alert-info">
+                Vous êtes sur la page de configuration des paramètres de votre site.
+            </div>
+
+        </div>
+
+        {% for message in app.session.flashbag.get('success') %}
+        <div class="col-lg-12">
+            <div class="alert alert-success">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                {{ message }}
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="col-lg-12">
+
+            <form role="form" method="post" {{ form_enctype(form) }} class="form-horizontal">
+
+                {% if form_errors(form) %}
+                    <div class="alert alert-danger alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        {{ form_errors(form) }}
+                    </div>
+                {% endif %}
+
+                <fieldset>
+                <legend>Général</legend>
+
+                <div class="form-group{% if form_errors(form.siteTitle) %} has-error{% endif %}">
+
+                    <label for="mgn_corebundle_configtype_siteTitre" class="col-lg-3 control-label">Titre du site</label>
+
+                    <div class="col-lg-7">
+
+                        {{ form_widget(form.siteTitle, { 'attr' : { 'class' : 'form-control', 'placeholder' : "Titre du site" } }) }}
+
+                    </div>
+
+                    <div class="col-lg-offset-3 col-lg-7">
+
+                        <p class="help-block">Le nom de votre site ou de votre organisation.</p>
+
+                    </div>
+
+                </div>
+
+                <div class="form-group{% if form_errors(form.siteDescription) %} has-error{% endif %}">
+
+                    <label for="mgn_corebundle_configtype_siteDescription" class="col-lg-3 control-label">Description</label>
+
+                    <div class="col-lg-7">
+
+                        {{ form_widget(form.siteDescription, { 'attr' : { 'class' : 'form-control' } }) }}
+
+                    </div>
+
+                    <div class="col-lg-offset-3 col-lg-7">
+
+                        <p class="help-block">Une description courte de votre site, un slogan.</p>
+
+                    </div>
+
+                </div>
+
+                <div class="form-group{% if form_errors(form.email) %} has-error{% endif %}">
+
+                    <label for="mgn_corebundle_configtype_email" class="col-lg-3 control-label">Email de contact</label>
+
+                    <div class="col-lg-7">
+
+                        {{ form_widget(form.email, { 'attr' : { 'class' : 'form-control' } }) }}
+
+                    </div>
+
+                </div>
+
+                </fieldset>
+
+                <fieldset>
+                <legend>Profil utilisateur</legend>
+
+               <div class="row">
+                    <label class="col-lg-3 control-label">Informations général</label>
+                    <div class="col-lg-7">
+                        <div class="checkbox">
+                            <label>
+                                {{ form_widget(form.profileFirstName) }} Prénom
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+               <div class="row">
+                    <div class="col-lg-offset-3 col-lg-7">
+                        <div class="checkbox">
+                            <label>
+                                {{ form_widget(form.profileLastName) }} Nom
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+               <div class="row">
+                    <div class="col-lg-offset-3 col-lg-7">
+                        <div class="checkbox">
+                            <label>
+                                {{ form_widget(form.profileBirthday) }} Date anniversaire
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+               <div class="row">
+                    <label for="mgn_corebundle_configtype_profileSignature" class="col-lg-3 control-label">Forum</label>
+                    <div class="col-lg-7">
+                        <div class="checkbox">
+                            <label>
+                                {{ form_widget(form.profileSignature) }} Signature
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+               <div class="row">
+                    <label for="mgn_corebundle_configtype_profileTwitter" class="col-lg-3 control-label">Réseaux sociaux</label>
+                    <div class="col-lg-7">
+                        <div class="checkbox">
+                            <label>
+                                {{ form_widget(form.profileTwitter) }} Twitter
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+               <div class="row">
+                    <div class="col-lg-offset-3 col-lg-7">
+                        <div class="checkbox">
+                            <label>
+                                {{ form_widget(form.profileFacebook) }} Facebook
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+               <div class="row">
+                    <div class="col-lg-offset-3 col-lg-7">
+                        <div class="checkbox">
+                            <label>
+                                {{ form_widget(form.profileGoogleplus) }} Google plus
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+               <div class="row">
+                    <div class="col-lg-offset-3 col-lg-7">
+                        <div class="checkbox">
+                            <label>
+                                {{ form_widget(form.profileSteam) }} Steam
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                </fieldset>
+
+                <fieldset>
+                <legend>Forum</legend>
+
+                <div class="form-group{% if form_errors(form.forumIndexLigne) %} has-error{% endif %}">
+
+                    <label for="mgn_corebundle_configtype_forumIndexLigne" class="col-lg-3 control-label">Nombre de forum par ligne</label>
+
+                    <div class="col-lg-7">
+
+                        {{ form_widget(form.forumIndexLigne, { 'attr' : { 'class' : 'form-control' } }) }}
+
+                    </div>
+
+                    <div class="col-lg-offset-3 col-lg-7">
+
+                        <p class="help-block">Uniquement si vous avez choisi la présentation du forum en block dans l'apparence.</p>
+
+                    </div>
+
+                </div>
+
+                <div class="form-group{% if form_errors(form.forumTopicPage) %} has-error{% endif %}">
+
+                    <label for="mgn_corebundle_configtype_forumTopicPage" class="col-lg-3 control-label">Nombre de sujet par page</label>
+
+                    <div class="col-lg-7">
+
+                        {{ form_widget(form.forumTopicPage, { 'attr' : { 'class' : 'form-control' } }) }}
+
+                    </div>
+
+                </div>
+
+                <div class="form-group{% if form_errors(form.forumPostPage) %} has-error{% endif %}">
+
+                    <label for="mgn_corebundle_configtype_forumPostPage" class="col-lg-3 control-label">Nombre de message par page</label>
+
+                    <div class="col-lg-7">
+
+                        {{ form_widget(form.forumPostPage, { 'attr' : { 'class' : 'form-control' } }) }}
+
+                    </div>
+
+                </div>
+
+                </fieldset>
+
+                {{ form_widget(form) }}
+
+                <div class="form-actions">
+
+                    <div class="col-lg-offset-3 col-lg-7">
+
+                        <button type="submit" class="btn btn-primary">Mettre à jour</button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+{% endblock %}

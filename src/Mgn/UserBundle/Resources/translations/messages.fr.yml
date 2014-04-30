@@ -1,0 +1,124 @@
+user:
+
+    ariane:
+
+        members: Membres
+        login: Se connecter
+        register: Inscription
+        resetting: Récupération de votre compte
+        reset: Nouveau mot de passe
+
+    button:
+
+        already_registered: Je possède déjà un compte
+        register: S'inscrire
+        connect: Se connecter
+        forget_password: J'ai oublié mon mot de passe
+        requesting_submit: Je reconnais être tête en l'air
+        reset: Modifier
+        add: Ajouter
+
+    requesting:
+
+        request:
+
+            title: Récupération de votre compte
+            message: Alors comme ça on a la mémoire courte et on a oublié son mot de passe ? Pas de panique ! Indiquez votre adresse e-mail ou votre nom d'utilisateur pour en recevoir un nouveau.
+
+        check_email:
+
+            title: Récupération de votre compte
+            message: Un email vient de vous être envoyer, merci de bien vouloir consulter votre boite de réception. Si celui-ci n'arrive pas, pensez à vérifier dans vos spams avant de prendre contact avec nous.
+
+    reset:
+    
+        title: Nouveau mot de passe
+        message: Veuillez renseigner votre nouveau mot de passe ci-dessous.
+
+    form:
+
+        login:
+        register:
+        helper:
+        addgroup:
+
+            name: Nom du groupe
+
+        users_list:
+
+            search: Rechercher un membre
+            addUser: Ajouter un utilisateur
+
+        groups_list:
+
+            search: Rechercher un groupe
+            addGroup: Ajouter un groupe
+
+    flash:
+
+        danger:
+
+            not_active: Ce compte n'est pas activé, nous vous avons renvoyer un email de confirmation.
+
+    mail:
+
+        register:
+
+            subject: Confirmation de votre inscription
+
+        resetting:
+
+            subject: Récupération de compte
+
+    users_list:
+
+        title: Administration des membres
+        unlocked: Autorisé
+        locked: Vérouillé
+        status: Status
+
+    user_profil:
+
+        profile: Profil de
+        date_registered: Date d'inscription
+        date_last_login: Dernière connexion
+        email: Adresse email
+        theme: Thème du site
+        status: Status
+
+    groups_list:
+
+        title: Administration des groupes
+        members: "%count% membre|]1,+Inf]%count% membres"
+
+security.login.title: Accès à votre espace personnel
+security.login.message: Cette page vous permet de vous connecter en tant que membre. Une fois connecté, vous pourrez participer à la vie du site et de sa communautée.
+security.login.form.identifying: Identifiant
+security.login.form.password: Mot de passe
+security.login.form.remember: Se souvenir de moi
+security.login.form.note: Note
+security.login.form.note.identifying: Votre pseudo ou votre adresse e-mail.
+security.login.form.warning: Attention
+security.login.form.warning.remember: N'activer pas cette option si vous n'êtes pas sur votre ordinateur
+security.login.form.error: Erreur
+Bad credentials: Mauvais identifiant et/ou mot de passe.
+User account is disabled.: Ce compte n'est pas encore activé, veuillez consulter vos emails.
+
+registration.register.title: S'inscrire sur le site
+registration.register.message: Inscrivez-vous pour profiter pleinement de notre site. Un email vous sera envoyé pour vérification, faites attention de nous indiquer une adresse e-mail valide.
+registration.register.form.identifying: Nom d'utilisateur
+registration.register.form.rules: Règles
+registration.register.form.rules.identifying: Entre 2 et 20 caractères
+registration.register.form.email: Adresse e-mail
+registration.register.form.password: Mot de passe
+registration.register.form.password_confirmation: Vérification
+registration.register.form.warning: Attention
+registration.register.form.warning.email: Pensez à vérifier vos spams si vous ne recevez pas l'email de confirmation.
+registration.register.form.rules.password: 6 caractères minimum
+registration.register.flash.confirm: Votre inscription à bien été prise en compte, un email vous à été envoyé pour l'activer.
+registration.confirmation.flash.confirm: Votre compte est activé, vous pouvez dès à présent vous connecter.
+user.requesting.request.form.warning: Attention
+user.requesting.request.form.warning.texte: Pensez à vérifier vos spams si vous ne recevez pas l'email de récupération.
+resetting.request.invalid_username: Aucun compte n'as été trouvé avec l'identifiant
+resetting.request.invalid_reset: La requête de changement de mot de passe est invalide.
+resetting.reset.flash.confirm: Votre mot de passe à bien été modifié, vous pouvez dès à présent vous connecter sur votre compte.

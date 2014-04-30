@@ -1,0 +1,101 @@
+{% set url = app.request.schemeAndHttpHost %}
+
+<div class="col-lg-12">
+
+        <form id="formArticleTitle" action="{{ path('mgn_admin_article_edition', {'id': article.id})}}" method="post" {{ form_enctype(form_article_title) }} class="form-horizontal" role="form">
+
+            <div class="form-group">
+
+            <label for="mgn_articlebundle_articletype_contenu">Titre de l'article<span class="text-danger"> *</span> <img class="loader" src="{{ asset('admin/img/ajax-loader.gif') }}" title="" /></label>
+
+            {{ form_widget(form_article_title.title, { 'attr' : { 'class' : 'form-control input-lg formrecord', 'placeholder' : "Titre de l'article" } }) }}
+                
+            {{ form_rest(form_article_title) }}
+
+            </div>
+
+        </form>
+
+        <form id="formArticleHeader" action="{{ path('mgn_admin_article_edition', {'id': article.id})}}" method="post" {{ form_enctype(form_article_header) }} class="form-horizontal" role="form">
+
+            <div class="form-group">
+                
+                    <label for="mgn_articlebundle_articletype_contenu">Image d'en-tête<span class="text-danger"> *</span> <img class="loader" src="{{ asset('admin/img/ajax-loader.gif') }}" title="" /></label>
+
+                    <div class="input-group">
+
+                        <span class="input-group-addon">
+
+                            <a href="#null" onclick="javascript:open_uploads();"><i class="fi-upload"></i></a>
+
+                        </span>
+
+                        {{ form_widget(form_article_header.header, { 'attr' : { 'class' : 'form-control picture formrecord' } }) }}
+
+                        <span class="input-group-btn" id="mgn_articlebundle_articletype_header_loader"><span class="btn btn-default" type="button"><img src="{{ asset('admin/img/ajax-loader-picture.gif') }}" title="" /></span></span>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-lg-12">
+
+                            <div id="pictureHeaderView" style="margin-top: 20px;"><div></div></div>
+
+                        </div>
+
+                    </div>
+
+            </div>
+                
+            {{ form_rest(form_article_header) }}
+
+        </form>
+
+        <form id="formArticleIntroduction" action="{{ path('mgn_admin_article_edition', {'id': article.id})}}" method="post" {{ form_enctype(form_article_introduction) }} class="form-horizontal" role="form">
+
+            <div class="form-group">
+                    <label for="mgn_articlebundle_articletype_contenu">Introduction<span class="text-danger"> *</span> <img class="loader" src="{{ asset('admin/img/ajax-loader.gif') }}" title="" /></label>
+
+                    <div class="row">
+
+                        <div class="col-lg-12">
+
+                            <div class="controls input-100largemin">
+                                
+                                {{ form_widget(form_article_introduction.introduction, { 'attr' : { 'class' : 'form-control textarea_elastic formrecord', 'rows' : '2' } }) }}
+                            
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {{ form_rest(form_article_introduction) }}
+
+        </form>
+
+</div>
+
+<script type="text/javascript">
+<!--
+function open_uploads()
+{
+        width = 800;
+        height = 600;
+        if(window.innerWidth)
+        {
+                var left = (window.innerWidth-width)/2;
+                var top = (window.innerHeight-height)/2;
+        }
+        else
+        {
+                var left = (document.body.clientWidth-width)/2;
+                var top = (document.body.clientHeight-height)/2;
+        }
+        window.open('{{ path('mgn_admin_article_picture_add') }}','nom_de_ma_popup','menubar=no, scrollbars=no, top='+top+', left='+left+', width='+width+', height='+height+'');
+}
+-->
+</script>

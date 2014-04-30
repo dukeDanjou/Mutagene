@@ -1,0 +1,84 @@
+{% extends "MgnUserBundle::admin.html.twig" %}
+
+{% block title %}
+    {{ 'user.users_list.title'|trans }} - {{ parent() }}
+{% endblock %}
+
+{% block arianne %}
+    {{ parent() }}
+        </li>
+        <li>
+            {{ 'user.ariane.users_list'|trans }}
+{% endblock %}
+
+{% block body %}
+
+	<div class="row">
+
+		<div class="large-4 columns" style="background-color: #f0f0f0;">
+
+			<div class="row">
+
+				<div class="large-12 columns" style="background-color: #f0f0f0; border-bottom: 4px solid grey; padding-top: 16px; height: 74px;">
+
+					<div class="row">
+
+						<div class="large-10 columns">
+
+						<form action="#">
+
+							<input type="text" name="search" id="id_search" placeholder="{{ 'user.form.users_list.search'|trans }}">
+
+						</form>
+
+						</div>
+
+						<div class="large-2 columns">
+
+							<span data-tooltip class="has-tip tip-bottom" title="{{ 'user.form.users_list.addUser'|trans }}"><i class="fi-plus right button tiny disabled"></i></span>
+
+						</div>
+
+					</div>
+
+				</div>
+
+				<div class="large-12 columns toSize">
+
+					<div class="row" id="list_users">
+
+						{% for user in users_list %}
+						<a href="{{ path('mgn_user_admin_profile_user', { 'id': user.id }) }}" class="link_dynamic">
+							<div class="large-12 columns list_users" style="border-bottom: 2px solid #c8c8c8; height: 100px; padding-top: 0px; background-color: #fff;" id="{{ user.usernameCanonical }}">
+
+								<p>
+									
+									<h4 style="color: #323232; font-weight: bold;">{{ user.username }}</h4>
+
+									<small style="color: #323232; font-size: 12px;">{{ 'user.users_list.status'|trans }} : {% if user.locked == false %}<span style="color: green;">{{ 'user.users_list.unlocked'|trans }}</span>{% else %}<span style="color: red;">{{ 'user.users_list.locked'|trans }}</span>{% endif %}</small>
+
+									<div class="hide">{{ user.email }}</div>
+									
+								</p>
+
+							</div>
+						</a>
+						{% endfor %}
+
+					</div>
+
+				</div>
+
+			</div>
+
+		<!--<a href="/Symfony/web/app_dev.php/admin/site/parametres" class="link_dynamic">PARAMETRES</a></li>-->
+
+		</div>
+
+		<div class="large-8 columns toSize2" style="border-left: 8px solid #c8c8c8;" id="load_dynamic">
+
+		</div>
+		
+	</div>
+
+{% endblock %}

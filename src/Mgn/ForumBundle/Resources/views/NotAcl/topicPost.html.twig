@@ -1,0 +1,21 @@
+{% extends "MgnForumBundle::layout.html.twig" %}
+
+{% block title %}
+	Droits insuffisant ! - {{ parent() }}
+{% endblock %}
+
+{% block arianne %}
+	{{ parent() }}
+						</li>
+						<li class="active">
+							Droits insuffisant !
+{% endblock %}
+
+{% block body_forum %}
+
+	<div class="alert alert-danger">
+		<strong>Erreur : </strong>
+		Vous ne disposez pas des droits suffisants pour poster un message dans ce forum !
+	</div>
+    
+{% endblock %}

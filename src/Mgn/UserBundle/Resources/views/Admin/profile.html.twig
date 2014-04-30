@@ -1,0 +1,132 @@
+{% block sidebar_users %}active{% endblock %}
+
+{% block body %}
+
+<div class="row">
+
+	<div class="col-lg-12" style="background-color: #f0f0f0; border-bottom: 4px solid #555; padding-top: 16px; height: 74px;">
+
+		<div class="row">
+
+			<div class="col-lg-10">
+
+				<h1 style="margin:0px;"><i class="fi-torsos-all"></i> {{ user.username }}</h1>
+
+			</div>
+
+			<div class="col-lg-2">
+
+				<button type="button" disabled="disabled" class="btn btn-primary pull-right" data-toggle="tooltip" data-placement="bottom" title="Administrer {{ user.username }}" data-original-title="Administrer {{ user.username }}"><i class="fi-widget"></i></button>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="col-lg-12">
+
+		<div class="row">
+
+			<div class="col-lg-6">
+
+				<div class="page-header">
+
+					<h3>Compte</h3>
+
+				</div>
+
+				<p>
+
+					<ul class="list-unstyled">
+						<li>{{ 'user.user_profil.date_registered'|trans }} : {{ user.registered|date('d/m/Y') }}</li>
+						<li>{{ 'user.user_profil.date_last_login'|trans }} : {{ user.lastLogin|date('d/m/Y') }}</li>
+						<li>{{ 'user.user_profil.theme'|trans }} : {{ user.theme }}</li>
+						<li>{{ 'user.user_profil.status'|trans }} : {% if user.locked == false %}<span class="text-success">{{ 'user.users_list.unlocked'|trans }}</span>{% else %}<span class="text-danger">{{ 'user.users_list.locked'|trans }}</span>{% endif %}</li>
+					</ul>
+
+				</p>
+
+			</div>
+
+			<div class="col-lg-6">
+
+				<div class="page-header">
+
+					<h3>Profil</h3>
+
+				</div>
+
+				<p>
+
+					<ul class="list-unstyled">
+						<li>{{ 'user.user_profil.email'|trans }} : {{ user.email }}</li>
+					</ul>
+
+				</p>
+
+			</div>
+
+		</div>
+
+		<div class="row">
+
+			<div class="col-lg-6">
+
+				<div class="page-header">
+
+					<h3>Groupes</h3>
+
+				</div>
+
+				{% if groups is empty %}
+
+					<div class="alert alert-info">
+						Ne fait partie d'aucun groupe
+					</div>
+
+				{% else %}
+
+					<table class="table">
+
+					<thead>
+
+						<tr>
+
+							<th>Nom du groupe</th>
+							<th>Défaut</th>
+							<th>Fonction dans le groupe</th>
+
+						</tr>
+
+					</thead>
+
+					{% for group in groups %}
+
+						<tbody>
+
+							<tr>
+
+								<td>{{ group.group.name }}</td>
+								<td>{% if group.default == true %}<i class="fi-check"></i>{% else %}{% endif %}</td>
+								<td>{{ group.function }}</td>
+
+							</tr>
+
+						</tbody>
+
+					{% endfor %}
+
+				{% endif %}
+
+				</table>
+
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+	
+{% endblock %}

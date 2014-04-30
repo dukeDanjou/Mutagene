@@ -1,0 +1,11 @@
+<section id="{{ content.id }}" class="sortable panel">
+
+	<div class="panel-body">
+
+		<p class="text-justify">{{ content.paragraph|nl2br }}</p>
+
+		<p><a href="{{ path('mgn_content', {'container': 'article', 'id': article.id, 'content': content.id, 'type': 'paragraph', 'action': 'edit'})}}" class="pull-right text-info content-edit"><small>Editer</small></a></p>
+
+	</div>
+
+</section>

@@ -1,0 +1,33 @@
+{% extends "MgnUserBundle::layout.html.twig" %}
+
+{% block arianne %}
+    {{ parent() }}
+    </li>
+    <li class="active">
+        {{ 'user.ariane.registration.register'|trans }}
+    </li>
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+
+    <div class="col-lg-12">
+
+        <div class="page-header">
+            <h1>{{ 'registration.register.title'|trans }}</h1>
+        </div>
+
+        <p>{{ 'registration.register.message'|trans }}</p>
+
+        {% for message in app.session.flashbag.get('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

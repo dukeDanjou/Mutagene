@@ -1,0 +1,99 @@
+{% extends "MgnCoreBundle::admin.html.twig" %}
+
+{% block title %}
+    Modules du site - {{ parent() }}
+{% endblock %}
+
+{% block arianne %}
+    {{ parent() }}<li>
+                            Modules du site
+{% endblock %}
+
+{% block sidebar_core %}active{% endblock %}
+{% block sidebar_core_modules %}select{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+
+        <div class="col-lg-12">
+
+            <div class="page-header">
+                <h1>
+                    <i class="fi-widget"></i> Modules du site
+                </h1>
+            </div>
+
+        </div>
+
+        <div class="col-lg-12">
+
+            <div class="alert alert-info">
+                Activez ou désactivez les modules du site suivant vos besoins.
+            </div>
+
+        </div>
+
+        {% for message in app.session.flashbag.get('success') %}
+        <div class="col-lg-12">
+            <div class="alert alert-success">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                {{ message }}
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="col-lg-12">
+
+            <form role="form" method="post" {{ form_enctype(form) }} class="form-horizontal">
+
+                {% if form_errors(form) %}
+                    <div class="alert alert-danger alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        {{ form_errors(form) }}
+                    </div>
+                {% endif %}
+
+                <div class="form-group{% if form_errors(form.cmsArticle) %} has-error{% endif %}">
+
+                    <label for="mgn_corebundle_modulestype_cmsArticle" class="col-lg-3 control-label">Module article</label>
+
+                    <div class="col-lg-7">
+
+                        {{ form_widget(form.cmsArticle, { 'attr' : { 'class' : 'form-control' } }) }}
+
+                    </div>
+
+                </div>
+
+                <div class="form-group{% if form_errors(form.cmsForum) %} has-error{% endif %}">
+
+                    <label for="mgn_corebundle_modulestype_cmsForum" class="col-lg-3 control-label">Module forum</label>
+
+                    <div class="col-lg-7">
+
+                        {{ form_widget(form.cmsForum, { 'attr' : { 'class' : 'form-control' } }) }}
+
+                    </div>
+
+                </div>
+
+                {{ form_widget(form) }}
+
+                <div class="form-actions">
+
+                    <div class="col-lg-offset-3 col-lg-7">
+
+                        <button type="submit" class="btn btn-primary">Mettre à jour</button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+{% endblock %}

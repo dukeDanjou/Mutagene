@@ -1,0 +1,17 @@
+mgn_content:
+    pattern:   /content/{container}/{id}/{type}/{content}/{action}
+    defaults:  { _controller: MgnContentBundle:Content:content, action: null }
+    requirements:
+        id:  \d+
+
+mgn_content_delete:
+    pattern:   /content/delete/{content}
+    defaults:  { _controller: MgnContentBundle:Content:contentDelete }
+    requirements:
+        id:  \d+
+
+mgn_content_sortable:
+    pattern:   /content/sortable
+    defaults:  { _controller: MgnContentBundle:Content:contentSortable }
+    requirements:
+        id:  \d+

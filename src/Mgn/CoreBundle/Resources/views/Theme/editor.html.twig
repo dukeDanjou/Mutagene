@@ -1,0 +1,132 @@
+{% extends "MgnCoreBundle::admin.html.twig" %}
+
+{% block title %}
+    Modifier les thèmes - {{ parent() }}
+{% endblock %}
+
+{% block sidebar_appearance %}active{% endblock %}
+{% block sidebar_appearance_themes %}select{% endblock %}
+
+{% block arianne %}
+    {{ parent() }}
+        </li>
+        <li>
+            Modifier les thèmes
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+
+    <div class="col-lg-12">
+
+        <div class="page-header">
+            <h1>
+            <i class="fi-monitor"></i> Modifier les thèmes
+            </h1>
+        </div>
+
+    </div>
+
+    <div class="col-lg-12">
+
+        <div class="alert alert-danger">
+            <strong>Attention : </strong>Vous vous trouvez sur la partie d'édition des thèmes. Des connaissances en html et css sont plus que nécessaire ici. Il y a un danger de plantage pour votre site.
+        </div>
+
+    </div>
+
+    <div class="col-lg-12" style="margin-bottom: 20px;">
+
+        <span class="lead">{{ theme.themeTitle }} : {% block editor_select %}{% endblock %}</span>
+
+        <span class="pull-right">
+            
+            <form class="form-inline" role="form">
+
+                <div class="form-group">
+
+                    <label>Sélectionner le thème à modifier :</label>
+
+                    <select class="form-control" onchange=" var url = this.options.selectedIndex;
+                    self.location.href=this.options[url].value;">
+
+                            {% for themeselect in themes %}
+
+                                <option value="{{ path('mgn_core_admin_editor_layout', {theme: themeselect.id }) }}" {% if theme.id == themeselect.id %}selected="selected"{% endif %}>{{ themeselect.themeTitle }}</option>
+
+                            {% endfor %}
+
+                    </select>
+
+                </div>
+
+            </form>
+
+        </span>
+
+    </div>
+
+    <div class="col-lg-12">
+
+        <div class="row">
+
+            <div class="col-lg-10">
+
+                {% block editor_contents %}{% endblock %}
+
+            </div>
+
+            <div class="col-lg-2">
+
+                <h5 class="text-muted"><strong>{{ "Base"|upper }}</strong></h5>
+
+                <ul class="nav nav-pills nav-stacked">
+
+                    <li{% block editor_select_head %}{% endblock %}><a href="{{ path('mgn_core_admin_editor_head', {theme: theme.id }) }}">En-tête</a></li>
+
+                    <li{% block editor_select_layout %}{% endblock %}><a href="{{ path('mgn_core_admin_editor_layout', {theme: theme.id }) }}">Body</a></li>
+
+                    <li{% block editor_select_menu %}{% endblock %}><a href="{{ path('mgn_core_admin_editor_menu', {theme: theme.id }) }}">Menu</a></li>
+
+                    <li{% block editor_select_javascript %}{% endblock %}><a href="{{ path('mgn_core_admin_editor_javascript', {theme: theme.id }) }}">Javascript</a></li>
+
+                </ul>
+
+                <h5 class="text-muted"><strong>{{ "Articles"|upper }}</strong></h5>
+
+                <ul class="nav nav-pills nav-stacked">
+
+                    <li{% if file is defined and file == 'articleBundleArticleIndex' %} class="active"{% endif %}><a href="{{ path('mgn_core_admin_editor', {theme: theme.id, file: 'articleBundleArticleIndex' }) }}">Index</a></li>
+
+                    <li{% if file is defined and file == 'articleBundleArticleRead' %} class="active"{% endif %}><a href="{{ path('mgn_core_admin_editor', {theme: theme.id, file: 'articleBundleArticleRead' }) }}">Lire</a></li>
+
+                    <li{% if file is defined and file == 'articleBundleLayout' %} class="active"{% endif %}><a href="{{ path('mgn_core_admin_editor', {theme: theme.id, file: 'articleBundleLayout' }) }}">Layout</a></li>
+
+                </ul>
+
+                <h5 class="text-muted"><strong>{{ "Forums"|upper }}</strong></h5>
+
+                <ul class="nav nav-pills nav-stacked">
+
+                    <li><a href="{{ path('mgn_core_admin_editor_head', {theme: theme.id }) }}">Index classic</a></li>
+
+                    <li><a href="{{ path('mgn_core_admin_editor_head', {theme: theme.id }) }}">Index block</a></li>
+
+                    <li><a href="{{ path('mgn_core_admin_editor_head', {theme: theme.id }) }}">View</a></li>
+
+                    <li><a href="{{ path('mgn_core_admin_editor_head', {theme: theme.id }) }}">Read</a></li>
+
+                    <li><a href="{{ path('mgn_core_admin_editor_head', {theme: theme.id }) }}">Sidebar</a></li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

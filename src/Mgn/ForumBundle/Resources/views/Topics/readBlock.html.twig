@@ -1,0 +1,602 @@
+{% extends "MgnForumBundle::layout.html.twig" %}
+
+{% block title %}{{ topic.title }} - Forum {{ topic.forum.name }} - {{ parent() }}{% endblock %}
+
+{% block arianne %}
+
+	{{ parent() }}
+    <li>{#<a href="{{ path('mgn_forum_section', {'sectionSlug': topic.categorie.section.slug}) }}">#}{{ topic.forum.category.name }}{#</a>#}</li>
+	<li><a href="{{ path('mgn_forum_view', {'id': topic.forum.id, 'forum': topic.forum.slug}) }}">{{ topic.forum.name }}</a></li>
+	<li class="active">{{ topic.title }}</li>
+
+{% endblock %}
+
+{% block pagetitle %}
+
+	{% if topicediter != null %}
+
+		<form action="" method="post" {{ form_enctype(form) }}>
+
+			<div class="form-group">
+				<div class="input-group">
+					{{ form_widget(form.title, { 'attr' : { 'class' : 'form-control' } }) }}
+					<span class="input-group-btn">
+					<button class="btn btn-primary btn-edit-topic" type="submit" id="_submit" name="_submit">Mettre à jour</button>
+					<a class="btn btn-default btn-edit-topic" href="{{ path('mgn_forum_topic_read', {'id': topic.id, 'slug': topic.slug, 'page': page }) }}">Annuler</a>
+					</span>
+				</div>
+			</div>
+
+			{{ form_widget(form) }}
+
+		</form>
+	
+	{% else %}
+
+		{% if topic.topicLock == true %}<i class="fi-lock"></i> {% endif %}
+		{% if topic.typeTopic == 'postit' %}<i class="fa fa-thumb-tack"></i> {% endif %}
+		{{ topic.title }}
+
+		{% if (is_granted("IS_AUTHENTICATED_REMEMBERED") and app.user.id == topic.firstMessage.author.id and topic.topicLock == false) or forumAclEdit != 0 %}
+			<a class="btn btn-default btn-sm tips" href ="{{ path('mgn_forum_topic_edit', {'id': topic.id, 'slug': topic.slug, 'page': page, 'topicediter': topic.id}) }}" data-toggle="tips" data-placement="top" title="Editer"><i class="fa fa-pencil"></i></a>
+		{% endif %}
+
+	{% endif %}
+    
+{% endblock %}
+
+{% block body %}
+
+    {% if Theme('forumBundleForumsReadBlock') != null %}
+
+        {% include template_from_string(Theme('forumBundleForumsReadBlock')|raw) %}
+
+    {% else %}
+
+		<div class="row">
+
+			{% if forumAclLock != 0 or forumAclMove != 0 or forumAclDelete != 0 %}
+
+				<div class="col-lg-12">
+
+					<section class="well">
+
+						Administration : 
+
+						{% if forumAclPostit != 0 %}
+						{% if topic.typeTopic == 'normal' %}
+						<a href="#modalPostit" class="btn btn-default btn-sm tips" data-toggle="modal" data-placement="top" title="Epingler le sujet"><i class="fa fa-thumb-tack"></i> Epingler</a>
+						{% else %}
+						<a href="#modalPostit" class="btn btn-primary btn-sm tips" data-toggle="modal" data-placement="top" title="Détacher le sujet"><i class="fa fa-thumb-tack"></i> Détacher</a>
+						{% endif %}
+						{% endif %}
+						{% if forumAclLock != 0 %}
+						{% if topic.topicLock == true %}
+						<a href="#modalLock" class="btn btn-primary btn-sm tips" data-toggle="modal" data-placement="top" title="Dévérouiller le sujet"><i class="fa fa-lock"></i> Dévérouiller</a>
+						{% else %}
+						<a href="#modalLock" class="btn btn-default btn-sm tips" data-toggle="modal" data-placement="top" title="Vérouiller le sujet"><i class="fa fa-unlock"></i> Vérouiller</a>
+						{% endif %}
+						{% endif %}
+						{% if forumAclMove != 0 %}
+						<a class="btn btn-default btn-sm tips" href ="{{ path('mgn_forum_topic_move', {'topicId': topic.id}) }}" data-placement="top" title="Déplacer le sujet"><i class="fa fa-share"></i> Déplacer</a>
+						{% endif %}
+						{% if forumAclDelete != 0 %}
+						<a href="#modalDelete" class="btn btn-default btn-sm tips" data-toggle="modal" data-placement="top" title="Supprimer le sujet"><i class="fi-trash"></i> Supprimer</a>
+						{% endif %}
+
+					</section>
+
+				</div>
+				
+				{% if forumAclLock != 0 %}
+
+					{% if topic.topicLock == true %}
+						<div id="modalLock" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+							<div class="modal-dialog">
+								<div class="modal-content">
+
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+								<h3 id="myModalLabel">Dévérouiller le sujet</h3>
+							</div>
+							<div class="modal-body">
+								<p>Etes vous sur de vouloir rouvrir le sujet et permettre aux membres de poster des messages ?</p>
+							</div>
+							<div class="modal-footer">
+								<button class="btn" data-dismiss="modal" aria-hidden="true">Non</button>
+								<a href ="{{ path('mgn_forum_topic_lock', {'id': topic.id, 'slug': topic.slug, 'page': page, 'topicfermer': topic.id}) }}" class="btn btn-primary">Oui</a>
+							</div>
+
+								</div><!-- /.modal-content -->
+							</div><!-- /.modal-dialog -->
+						</div>
+				    {% else %}
+				    	<div id="modalLock" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+							<div class="modal-dialog">
+								<div class="modal-content">
+			
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+								<h3 id="myModalLabel">Vérouiller le sujet</h3>
+							</div>
+							<div class="modal-body">
+								<p>Etes vous sur de vouloir fermer le sujet et interdire aux membres de poster des messages ?</p>
+							</div>
+							<div class="modal-footer">
+								<button class="btn" data-dismiss="modal" aria-hidden="true">Non</button>
+								<a href ="{{ path('mgn_forum_topic_lock', {'id': topic.id, 'slug': topic.slug, 'page': page, 'topicfermer': topic.id}) }}" class="btn btn-primary">Oui</a>
+							</div>
+
+								</div><!-- /.modal-content -->
+							</div><!-- /.modal-dialog -->
+						</div>
+				    {% endif %}
+
+				{% endif %}
+					
+				{% if forumAclDelete != 0 %}
+
+				    <div id="modalDelete" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+						<div class="modal-dialog">
+		
+							<div class="modal-content">
+				
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+									<h3 id="myModalLabel">Supprimer le sujet</h3>
+								</div>
+								<div class="modal-body">
+									<p>Etes vous sur de vouloir supprimé le sujet ainsi que tous ses messages ? Cette action est irréversible !</p>
+								</div>
+								<div class="modal-footer">
+									<button class="btn" data-dismiss="modal" aria-hidden="true">Non</button>
+									<a href ="{{ path('mgn_forum_topic_delete', {'topic': topic.id}) }}" class="btn btn-danger">Oui</a>
+								</div>
+
+							</div><!-- /.modal-content -->
+
+						</div><!-- /.modal-dialog -->
+
+					</div>
+
+				{% endif %}
+
+				{% if forumAclPostit != 0 %}
+
+					{% if topic.typeTopic == 'normal' %}
+
+						<div id="modalPostit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+							<div class="modal-dialog">
+		
+								<div class="modal-content">
+						
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+										<h3 id="myModalLabel">Epingler le topic</h3>
+									</div>
+									<div class="modal-body">
+										<p>Etes vous sur de vouloir épinglé ce sujet ?</p>
+									</div>
+									<div class="modal-footer">
+										<button class="btn" data-dismiss="modal" aria-hidden="true">Non</button>
+										<a href ="{{ path('mgn_forum_topic_postit', {'topicId': topic.id}) }}" class="btn btn-primary">Oui</a>
+									</div>
+
+								</div><!-- /.modal-content -->
+
+							</div><!-- /.modal-dialog -->
+
+						</div>
+
+				    {% else %}
+
+				    	<div id="modalPostit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+							<div class="modal-dialog">
+		
+								<div class="modal-content">
+						
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+										<h3 id="myModalLabel">Détacher le topic</h3>
+									</div>
+									<div class="modal-body">
+										<p>Etes vous sur de vouloir détacher ce sujet ?</p>
+									</div>	
+									<div class="modal-footer">
+										<button class="btn" data-dismiss="modal" aria-hidden="true">Non</button>
+										<a href ="{{ path('mgn_forum_topic_postit', {'topicId': topic.id}) }}" class="btn btn-primary">Oui</a>
+									</div>
+
+								</div><!-- /.modal-content -->
+
+							</div><!-- /.modal-dialog -->
+
+						</div>
+
+				    {% endif %}
+
+				{% endif %}
+				
+			{% endif %}
+
+			<section class="col-lg-12">
+
+				<ul class="pagination pagination-sm">
+					{# On utilise la fonction range(a, b) qui crée un tableau de valeurs entre a et b #}
+					{% for p in range(1, nb_pages) %}
+						<li{% if p == page %} class="active"{% endif %}>
+							<a href="{{ path('mgn_forum_topic_read', {'id': topic.id, 'slug': topic.slug, 'page': p}) }}">{{ p }}{% if p == page %} <span class="sr-only">(current)</span>{% endif %}</a>
+						</li>
+					{% endfor %}
+			    </ul>
+
+		    </section>
+
+		    <section class="col-lg-12">
+
+				{% for message in topic.messages %}
+
+					<div class="row">
+
+				    	<div class="col-lg-12">
+
+				    		<div id="{{ message.id }}" class="forum-message">
+
+					    		<div class="row">
+
+					    			<div class="col-lg-12">
+
+					    				<div class="forum-message-header">
+
+						    				<div class="row">
+
+						    					<div class="col-lg-2 forum-message-header-pseudo">
+
+						    					<p class="text-center">
+
+						    						<a href="{{ path('mgn_user_profile', {'username': message.author.usernameCanonical}) }}"><strong>{{ message.author.username }}</strong></a></p>
+
+						    					</div>
+
+						    					<div class="col-lg-10 forum-message-header-infos">
+
+						    						<em>
+
+						    						{{ message.date|datetime|capitalize }}
+													
+													</em>
+
+													<span class="pull-right forum-message-header-action">
+
+													{% if forumAclLock != 0 and message.id != topic.firstMessage.id %}
+
+														{% if message.messageLock == true %}
+
+															<a class="tips" href ="#modalLock{{ message.id }}" data-toggle="modal" data-placement="top" title="Autoriser"><i class="fi-lock"></i> <small>Autoriser</small></a>
+
+															<div id="modalLock{{ message.id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+																<div class="modal-dialog">
+																<div class="modal-content">
+
+
+																<div class="modal-header">
+																<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+																<h3 id="myModalLabel">Autoriser le message</h3>
+																</div>
+																<div class="modal-body">
+																<p>Etes vous sur de vouloir afficher le message de "{{ message.author.username }}" ?</p>
+																</div>
+																<div class="modal-footer">
+																<button class="btn" data-dismiss="modal" aria-hidden="true">Non</button>
+																<a href ="{{ path('mgn_forum_post_modo', {'id': topic.id, 'slug': topic.slug, 'page': page, 'postmodo': message.id}) }}" class="btn btn-primary">Oui</a>
+																</div>
+
+																</div><!-- /.modal-content -->
+																</div><!-- /.modal-dialog -->
+
+															</div>
+
+														{% else %}
+
+															<a class="tips" href ="#modalLock{{ message.id }}" data-toggle="modal" data-placement="top" title="Modérer"><i class="fa fa-unlock"></i> <small>Modérer</small></a>
+
+															<div id="modalLock{{ message.id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+																<div class="modal-dialog">
+																<div class="modal-content">
+
+																<div class="modal-header">
+																<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+																<h3 id="myModalLabel">Modérer le message</h3>
+																</div>
+																<div class="modal-body">
+																<p>Etes vous sur de vouloir modérer le message de {{ message.author.username }} ?</p>
+																</div>
+																<div class="modal-footer">
+																<button class="btn" data-dismiss="modal" aria-hidden="true">Non</button>
+																<a href ="{{ path('mgn_forum_post_modo', {'id': topic.id, 'slug': topic.slug, 'page': page, 'postmodo': message.id}) }}" class="btn btn-primary">Oui</a>
+																</div>
+
+																</div><!-- /.modal-content -->
+																</div><!-- /.modal-dialog -->
+
+															</div>
+														{% endif %}
+
+														{% if forumAclDelete != 0 and message.id != topic.FirstMessage.id %}
+															<a class="tips" href ="#modalDelete{{ message.id }}" data-toggle="modal" data-placement="top" title="Supprimer"><i class="fi-trash"></i> <small>Supprimer</small></a>
+
+															<div id="modalDelete{{ message.id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+																<div class="modal-dialog">
+																<div class="modal-content">
+
+																<div class="modal-header">
+																<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+																<h3 class="modal-title">Supprimer le message</h3>
+																</div>
+																<div class="modal-body">
+																<p>Etes vous sur de vouloir supprimé le message de "{{ message.author.username }}" ? Cette action est irréversible !</p>
+																</div>
+																<div class="modal-footer">
+																<button class="btn" data-dismiss="modal" aria-hidden="true">Non</button>
+																<a href ="{{ path('mgn_forum_post_delete', {'postId': message.id, 'page': page}) }}" class="btn btn-danger">Oui</a>
+																</div>
+
+																</div><!-- /.modal-content -->
+																</div><!-- /.modal-dialog -->
+
+															</div>
+														{% endif %}
+													{% endif %}
+
+													{% if postediter == null %}
+
+														{% if (is_granted("IS_AUTHENTICATED_REMEMBERED") and app.user.id == message.author.id and topic.topicLock == false) or forumAclEdit != 0 %}
+														<a class="tips" href ="{{ path('mgn_forum_post_edit', {'id': topic.id, 'slug': topic.slug, 'page': page, 'postediter': message.id}) }}#{{ message.id - 1 }}" data-toggle="tooltip" data-placement="top" title="Editer"><i class="fa fa-pencil"></i> <small>Editer</small></a>
+														{% endif %}
+
+													{% endif %}
+
+													</span>
+
+						    					</div>
+
+						    				</div>
+
+					    				</div><!-- /.forum-message-header -->
+
+					    			</div><!-- /.col-lg-12 -->
+
+					    			<div class="col-lg-12">
+
+					    				<div class="row">
+
+					    					<div class="col-lg-2">
+
+					    						<p class="text-center">
+					    							{{ message.author.avatar|avatar(message.author.avatarPath, message.author.email, '100', 'img-thumbnail')|raw }}
+					    						</p>
+
+					    					</div>
+
+					    					<div class="col-lg-10">
+
+					    						<div class="row">
+
+					    							<div class="col-lg-12">
+
+														{% if postediter != null and postediter == message.id %}
+
+															<div style="margin-right: 10px;">
+
+																<h4>Editer le message</h4>
+
+																<form action="" method="post" {{ form_enctype(form) }}>
+
+																	<div class="controls">
+																	        <div id="viewDiv"></div>
+																	</div>
+																		
+																	<fieldset>
+																		{% if form_errors(form) %}
+																			<div class="alert alert-block alert-danger fade in">
+																				<a class="close" data-dismiss="alert" href="#">&times;</a>
+																				{{ form_errors(form) }}
+																			</div>
+																		{% endif %}
+																	</fieldset>
+
+																	<div class="form-group">
+																		<div>
+
+																			{% set url = app.request.schemeAndHttpHost %}
+
+																	        {{ "mgn_messagebundle_messagetype_contents"|mcode('menu', 'article', url)|raw }}
+																			
+																			
+																			{{ form_widget(form.contents, { 'attr' : { 'class' : 'form-control', 'rows' : '15' } }) }}
+																		</div>
+																	</div>
+
+																	{{ form_widget(form) }}
+
+																<div class="form-actions">
+																<button class="btn btn-primary" type="submit" id="_submit" name="_submit">Mettre à jour</button>
+																<button class="btn btn-primary" type="button" onclick="view('mgn_messagebundle_messagetype_contents', 'comments', 'viewDiv', '{{ app.request.schemeAndHttpHost }}{{ app.request.getBaseURL() }}');">Visualiser</button>
+																<a class="btn btn-default" href="{{ path('mgn_forum_topic_read', {'id': topic.id, 'slug': topic.slug, 'page': page }) }}#{{ message.id - 1 }}">Annuler</a>
+																</div>
+
+																</form>
+
+															</div>
+
+														{% else %}
+
+															{% if message.messageLock == false %}
+
+																{% for message in app.session.flashbag.get(message.id) %}
+																<div class="alert alert-success">
+													            	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+													                {{ message }}
+													            </div>
+													            {% endfor %}
+
+																{% set url = app.request.schemeAndHttpHost %}
+
+												    			{{ message.contents|nl2br|mcode('parser', 'article', url)|raw }}
+
+												    		{% else %}
+
+												    			<span class="text-danger">Ce message à été modéré.</span>
+
+												    		{% endif %}
+
+														{% endif %}
+
+					    							</div>
+
+					    							<div class="col-lg-12">
+
+					    								{% if message.messageLock == false %}
+
+											    			{% if message.countEdit > 0 %}
+											    			<p>
+															-
+															<br />
+															<em><small>Dernière édition {{ message.dateEdit|datetime }}</small></em>
+															</p>
+															{% endif %}
+
+											    		{% endif %}
+
+					    								{% if message.author.signature != null %}
+
+											    			{% set url = app.request.schemeAndHttpHost %}
+
+											    			{{ message.author.signature|nl2br|mcode('parser', 'articles', url)|raw }}
+
+												    	{% endif %}
+
+				    								</div>
+
+					    						</div>
+
+					    					</div>
+
+					    				</div>
+
+					    			</div><!-- /.col-lg-12 -->
+
+					    		</div><!-- /.row -->
+
+				    		</div><!-- /.forum-message -->
+
+						</div><!-- /.col-lg-12 -->
+
+					</div><!-- /.row -->
+		   
+		    	{% endfor %}
+
+		    </section>
+	    
+	    <section class="col-lg-12">
+
+			<ul class="pagination pagination-sm">
+				{# On utilise la fonction range(a, b) qui crée un tableau de valeurs entre a et b #}
+				{% for p in range(1, nb_pages) %}
+					<li{% if p == page %} class="active"{% endif %}>
+						<a href="{{ path('mgn_forum_topic_read', {'id': topic.id, 'slug': topic.slug, 'page': p}) }}">{{ p }}{% if p == page %} <span class="sr-only">(current)</span>{% endif %}</a>
+					</li>
+				{% endfor %}
+		    </ul>
+
+	    </section>
+
+	    <div class="col-lg-12">
+
+		    {% if postediter == null and topicediter == null %}
+
+		    	{% if topic.topicLock == true %}
+
+			        <div class="alert alert-info">
+			            Ce sujet à été fermé par un administrateur du site.
+			        </div>
+
+			    {% else %}
+
+			        {% if (forumAclPost != 0) and (is_granted("IS_AUTHENTICATED_REMEMBERED")) %}
+			        	<div>
+		        	
+							<button class="btn btn-primary" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" style="margin-bottom: 20px;">
+						        Répondre à ce sujet
+						    </button>
+
+							<div id="collapseOne" class="collapse">
+
+								<form action="" method="post" {{ form_enctype(form) }}>
+				
+									<div class="controls">
+								        <div id="viewDiv"></div>
+								    </div>
+								    
+								    <fieldset>
+										{% if form_errors(form) %}
+											<div class="alert alert-block alert-danger fade in">
+												<a class="close" data-dismiss="alert" href="#">&times;</a>
+												{{ form_errors(form) }}
+											</div>
+										{% endif %}
+									</fieldset>
+									
+									<div class="form-group">
+										<div>
+
+											{% set url = app.request.schemeAndHttpHost %}
+
+											{{ "mgn_messagebundle_messagetype_contents"|mcode('menu', 'article', url)|raw }}
+									        
+											{{ form_widget(form.contents, { 'attr' : { 'class' : 'form-control', 'rows' : '15' } }) }}
+
+										</div>
+									</div>
+
+									{{ form_widget(form) }}
+									
+									<div class="form-actions">
+										<button class="btn btn-primary" type="submit" id="_submit" name="_submit">Poster le message</button>
+								        <button class="btn btn-primary" type="button" onclick="view('mgn_messagebundle_messagetype_contents', 'comments', 'viewDiv', '{{ app.request.schemeAndHttpHost }}{{ app.request.getBaseURL() }}');">Visualiser</button>
+									</div>
+
+								</form>
+
+							</div>
+						</div>
+				        
+				    {% elseif (forumAclPost != 0) %}
+				        <div class="alert alert-info">
+				            Vous devez être connecté pour pouvoir poster un message sur le forum.
+				        </div>
+				    {% else %}
+				        <div class="alert">
+				            Vous n'avez pas la permission de répondre à un sujet dans cette catégorie.
+				        </div>
+				    {% endif %}
+
+			    {% endif %}
+			    
+			{% endif %}
+
+			</div>
+
+		</div>
+
+	{% endif %}
+
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "::layout.html.twig" %}
+
+{% set bundle = 'user' %}
+
+{% block title %}{{ Config('siteTitle') }}{% endblock %}
+
+{% block pagetitle %}Membres{% endblock %}{% block arianne %}
+
+    {{ parent() }}
+    <li><a href="{{ path('mgn_user_list') }}">Membres</a></li>
+
+{% endblock %}
+
+{% block body %}
+ 
+{% endblock %}

@@ -1,0 +1,291 @@
+{% extends "MgnArticleBundle::admin.html.twig" %}
+
+{% block title %}
+    Les forums - {{ parent() }}
+{% endblock %}
+
+{% block sidebar_forums %}active{% endblock %}
+{% block sidebar_forums_all %}select{% endblock %}
+
+{% block body %}
+
+	<div class="row">
+	
+		<div class="col-lg-12">
+
+			<div class="page-header">
+
+				<h1>
+
+					<i class="fi-results-demographics"></i> Forums
+
+					<div class="pull-right">
+
+						<a href="#modalAddCategory" role="button" class="btn btn-primary" data-toggle="modal">Ajouter une catégorie</a>
+
+						{% if categories is empty %}
+							<button type="button" class="btn btn-default" disabled="disabled">Ajouter un forum</button>
+						{% else %}
+							<a href="#modalAddForum" role="button" class="btn btn-primary" data-toggle="modal">Ajouter un forum</a>
+		    			{% endif %}
+
+					</div>
+				</h1>
+
+    			<!-- Modal -->
+                <div id="modalAddCategory" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+                	<div class="modal-dialog">
+
+                		<div class="modal-content">
+
+                			<form name="" role="form" method="post" {{ form_enctype(formCategory) }}>
+
+								<div class="modal-header">
+
+	                				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	                				<h4 class="modal-title" id="myModalLabel">Ajouter une catégorie</h4>
+
+								</div>
+
+								<div class="modal-body">
+
+									<div class="form-group{% if form_errors(formCategory.name) %} has-error{% endif %}">
+
+										<label for="mgn_forumbundle_forumtype_name">Nom</label>
+
+										{{ form_widget(formCategory.name, { 'attr' : { 'class' : 'form-control', 'placeholder' : "Nom de la catégorie" } }) }}
+
+										<p class="help-block">Ce nom est utilisé pour définir un groupe de forums.</p>
+
+									</div>
+
+									<div class="form-group{% if form_errors(formCategory.sort) %} has-error{% endif %}">
+
+										<label for="mgn_forumbundle_forumtype_sort">Ordre</label>
+
+										{{ form_widget(formCategory.sort, { 'attr' : { 'class' : 'form-control' } }) }}
+
+										<p class="help-block">L'ordre permet d'organiser l'affichage de vos différentes catégories.</p>
+
+									</div>
+
+									<div class="form-group{% if form_errors(formCategory.description) %} has-error{% endif %}">
+
+										<label for="mgn_forumbundle_forumtype_description">Description</label>
+
+										{{ form_widget(formCategory.description, { 'attr' : { 'class' : 'form-control', 'rows' : '5' } }) }}
+
+										<p class="help-block">La description n’est pas très utilisée par défaut, cependant de plus en plus de thèmes l’affichent.</p>
+
+									</div>
+
+									{{ form_rest(formCategory) }}
+
+								</div>
+
+								<div class="modal-footer">
+
+									<div class="form-actions">
+
+										<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+
+						                <button type="submit" class="btn btn-primary">Ajouter une nouvelle catégorie</button>
+
+						            </div>
+
+						        </div>
+									
+							</form>
+
+						</div><!-- /.modal-content -->
+
+					</div><!-- /.modal-dialog -->
+
+				</div><!-- /.modal -->
+
+				<!-- Modal -->
+                <div id="modalAddForum" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+                	<div class="modal-dialog">
+
+                		<div class="modal-content">
+
+                			<form name="" role="form" method="post" {{ form_enctype(formForum) }}>
+
+								<div class="modal-header">
+
+	                				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	                				<h4 class="modal-title" id="myModalLabel">Ajouter un forum</h4>
+
+								</div>
+
+								<div class="modal-body">
+
+									<div class="form-group{% if form_errors(formForum.name) %} has-error{% endif %}">
+
+										<label for="mgn_forumbundle_forumtype_name">Nom</label>
+
+										{{ form_widget(formForum.name, { 'attr' : { 'class' : 'form-control', 'placeholder' : "Nom du forum" } }) }}
+
+									</div>
+
+									<div class="form-group">
+
+										<label for="mgn_forumbundle_forumtype_category">Catégorie</label>
+                        
+                        				{{ form_widget(formForum.category, { 'attr' : { 'class' : 'form-control'} }) }}
+
+									</div>
+
+									<div class="form-group{% if form_errors(formForum.sort) %} has-error{% endif %}">
+
+										<label for="mgn_forumbundle_forumtype_sort">Ordre</label>
+
+										{{ form_widget(formForum.sort, { 'attr' : { 'class' : 'form-control' } }) }}
+
+										<p class="help-block">L'ordre permet d'organiser l'affichage de vos différents forums.</p>
+
+									</div>
+
+									<div class="form-group{% if form_errors(formForum.description) %} has-error{% endif %}">
+
+										<label for="mgn_forumbundle_forumtype_description">Description</label>
+
+										{{ form_widget(formForum.description, { 'attr' : { 'class' : 'form-control', 'rows' : '1' } }) }}
+
+										<p class="help-block">Décrivez en quelques mots ce que contiendra ce forum.</p>
+
+									</div>
+
+									<div class="form-group">
+											<div class="checkbox">
+												<label>
+													{{ form_widget(formForum.publicAclView) }} Autorisé <strong>tout le monde</strong> à <strong>voir</strong> le forum.
+												</label>
+											</div>
+											<div class="checkbox">
+												<label>
+													{{ form_widget(formForum.publicAclPost) }} Autorisé <strong>tous les membres</strong> à <strong>poster des messages.</strong>
+												</label>
+											</div>
+											<div class="checkbox">
+												<label>
+													{{ form_widget(formForum.publicAclTopic) }} Autorisé <strong>tous les membres</strong> à <strong>créer des sujets.</strong>
+												</label>
+											</div>
+
+											<p class="help-block">Pour définir des accès privés spécifiques, vous pourrez le faire après dans la partie gestion des acls.</p>
+									</div>
+
+									{{ form_rest(formForum) }}
+
+								</div>
+
+								<div class="modal-footer">
+
+									<div class="form-actions">
+
+										<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+
+						                <button type="submit" class="btn btn-primary">Ajouter un nouveau forum</button>
+
+						            </div>
+
+						        </div>
+									
+							</form>
+
+						</div><!-- /.modal-content -->
+
+					</div><!-- /.modal-dialog -->
+
+				</div><!-- /.modal -->
+
+			</div>
+
+		</div>
+
+		{% for message in app.session.flashbag.get('success') %}
+		<div class="col-lg-12">
+	        <div class="alert alert-success">
+	        	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+	            {{ message }}
+	        </div>
+        </div>
+        {% endfor %}
+
+	    <div class="col-lg-12">
+
+	    	{% if categories is empty %}
+
+		        <div class="alert alert-info">
+		            Pour commencer à mettre en place vos forums, vous devez ajouter une catégorie.
+		        </div>
+
+		    {% else %}
+
+		    	<table class="table table-hover">
+		            <thead>
+		                <tr>
+		                    <th>Ordre</th>
+		                    <th>Nom</th>
+		                    <th>Description</th>
+		                    <th>Acl Public</th>
+		                    <th>Identifiant</th>
+		                    <th>Actions</th>
+		                </tr>
+		            </thead>
+		            <tbody>
+
+		                {% for category in categories %}
+
+		                	<td style="background-color: #428bca; color: white;">{{ category.sort }}</td>
+		                	<td style="background-color: #428bca; color: white;">{{ category.name }}</td>
+		                	<td style="background-color: #428bca; color: white;" colspan="2">{{ category.description }}</td>
+		                	<td style="background-color: #428bca; color: white;">{{ category.slug }}</td>
+		                	<td style="background-color: #428bca; color: white;">
+		                		<a class="btn btn-default btn-xs tips" href="{{ path('mgn_admin_forum_category_edit', {'id': category.id}) }}" title="Modifier" data-toggle="tooltip" data-placement="left"><i class="fi-wrench"></i></a>
+		                		{#{% if category.forums is empty %}
+		                		<a class="btn btn-default btn-xs tips" href="{{ path('mgn_admin_forum_category_delete', {'id': category.id}) }}" title="Supprimer" data-toggle="tooltip" data-placement="right"><i class="fi-trash"></i></a>
+		                		{% endif %}#}
+		                	</td>
+
+		                	{% if category.forums is empty %}
+		                		</tbody>
+		                	{% else %}
+		                	{% for forum in category.forums %}
+
+			                	</tbody>
+			                	<tbody>
+			                	<td>{{ forum.sort }}</td>
+			                	<td>{{ forum.name }}</td>
+			                	<td>{{ forum.description }}</td>
+			                	<td>
+			                		{% if forum.publicAclView == true %}v{% endif %}
+	                                {% if forum.publicAclPost == true %}p{% endif %}
+	                                {% if forum.publicAclTopic == true %}t{% endif %}
+			                	</td>
+			                	<td>{{ forum.slug }}</td>
+			                	<td>
+			                		<a class="btn btn-primary btn-xs tips" href="{{ path('mgn_admin_forum_edit', {'id': forum.id}) }}" title="Modifier" data-toggle="tooltip" data-placement="left"><i class="fi-wrench"></i></a>
+			                		{#<a class="btn btn-default btn-xs tips" href="{{ path('mgn_admin_forum_delete', {'id': forum.id}) }}" title="Supprimer" data-toggle="tooltip" data-placement="right"><i class="fi-trash"></i></a>#}
+			                	</td>
+			                	</tbody>
+			                	<tbody>
+
+		                	{% endfor %}
+		                	{% endif %}
+
+		                {% endfor %}
+
+		            </tbody>
+		        </table>
+
+		    {% endif %}
+
+	    </div>
+
+    </div>
+
+{% endblock %}

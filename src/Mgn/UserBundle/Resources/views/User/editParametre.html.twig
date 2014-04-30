@@ -1,0 +1,129 @@
+{% extends "MgnUserBundle::layout.html.twig" %}
+
+{% block title %}{{ app.user.username }} - Paramètres - {{ parent() }}{% endblock %}
+
+{% block arianne %}
+
+	{{ parent() }}
+	<li><a href="{{ path('mgn_user_profile', {'username': app.user.usernameCanonical}) }}">{{ app.user.username }}</a></li>
+	<li class="active">Paramètres</li>
+
+{% endblock %}
+
+{% block pagetitle %}
+
+    Mon compte
+    
+{% endblock %}
+
+{% block body %}
+
+	<div class="row">
+
+		{% if is_granted("IS_AUTHENTICATED_REMEMBERED") and app.user.usernameCanonical == user.usernameCanonical %}
+
+			<div class="col-lg-12">
+
+				<ul class="nav nav-tabs">
+
+					<li><a href="{{ path('mgn_user_profile', {'username': user.usernameCanonical}) }}">Profil</a></li>
+					<li><a href="{{ path("mgn_user_edit_profile", {'username': user.usernameCanonical}) }}">Modifier</a></li>
+					<li class="active"><a href="{{ path("mgn_user_edit_parameters", {'username': user.usernameCanonical}) }}">Paramètres</a></li>
+
+				</ul>
+
+			</div>
+
+		{% endif %}
+
+		<div class="col-lg-12" style="margin-top: 30px;">
+
+			{% for message in app.session.flashbag.get('success') %}
+			<div class="row">
+			<div class="col-lg-12">
+		        <div class="alert alert-success">
+		        	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		            {{ message }}
+		        </div>
+		    </div>
+		    </div>
+		    {% endfor %}
+
+			<form method="post" class="form-horizontal">
+
+				<fieldset>
+					<legend>Compte</legend>
+
+					<p>
+				      {# On affiche tous les messages flash dont le nom est « info » #}
+				      {% for message in app.session.flashbag.get('info') %}
+				        <p>{{ message }}</p>
+				      {% endfor %}
+				    </p>
+
+					<div class="form-group">
+						<label class="col-lg-3 control-label" for="inputEmail">Nom d'utilisateur</label>
+						<div class="col-lg-6">
+							<input class="form-control" id="disabledInput" type="text" placeholder="{{ app.user.username }}" disabled>
+							<span class="help-block">
+								Veuillez contacter un admin pour changer votre pseudo.
+							</span>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-lg-3 control-label" for="inputEmail">Adresse e-mail</label>
+						<div class="col-lg-6">
+							<input class="form-control" id="disabledInput" type="text" placeholder="{{ app.user.email }}" disabled>
+							<span class="help-block">
+								Veuillez contacter un admin pour changer votre email.
+							</span>
+						</div>
+					</div>
+
+				</fieldset>
+
+			</form>
+
+			<form {{ form_enctype(formPassword) }} method="post" class="form-horizontal">
+			
+				<fieldset>
+
+					<legend>Complétez le formulaire</legend>
+					
+					{% if form_errors(formPassword.password.first) %}
+						<div class="alert alert-block alert-danger fade in">
+							<a class="close" data-dismiss="alert" href="#">&times;</a>
+							{{ form_errors(formPassword.password.first) }}
+						</div>
+					{% endif %}
+
+					<div class="form-group{% if form_errors(formPassword.password.first) %} has-error{% endif %}">
+						<label class="col-lg-3 control-label" for="fos_user_change_password_form_plainPassword_first">Nouveau mot de passe</label>
+						<div class="col-lg-6">
+							{{ form_widget(formPassword.password.first, { 'attr' : { 'class' : 'form-control' } }) }}
+						</div>
+					</div>
+
+					<div class="form-group{% if form_errors(formPassword.password.first) %} has-error{% endif %}">
+						<label class="col-lg-3 control-label" for="fos_user_change_password_form_plainPassword_second">Vérification</label>
+						<div class="col-lg-6">
+							{{ form_widget(formPassword.password.second, { 'attr' : { 'class' : 'form-control' } }) }}
+						</div>
+					</div>
+				</fieldset>
+			    {{ form_widget(formPassword) }}
+
+			    <div class="form-group">
+					<div class="col-lg-offset-3 col-lg-6">
+						<button class="btn btn-primary" type="submit">Modifier le mot de passe</button>
+					</div>
+				</div>
+				
+			</form>
+
+		</div>
+
+	</div>
+
+{% endblock %}

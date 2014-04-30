@@ -1,0 +1,228 @@
+{% extends "MgnForumBundle::layout.html.twig" %}
+
+{% block title %}Forum {{ forum.name }} - Catégorie {{ forum.category.name }} - {{ parent() }}{% endblock %}
+
+{% block arianne %}
+
+    {{ parent() }}
+    <li class="active">{{ forum.category.name }}</li>
+	<li class="active">{{ forum.name }}</li>
+
+{% endblock %}
+
+{% block pagetitle %}
+
+    Forum {{ forum.name }}
+    
+{% endblock %}
+
+{% block body %}
+
+    {% if Theme('forumBundleForumsViewBlock') != null %}
+
+        {% include template_from_string(Theme('forumBundleForumsViewBlock')|raw) %}
+
+    {% else %}
+
+		<div class="row">
+
+			<div class="col-lg-12">
+
+				<p class="lead">
+					{{ forum.description }}
+				</p>
+
+				{% if forum.topics is empty %}
+
+			        <div class="alert alert-warning">
+			            Aucun sujet n'as été créé dans ce forum.
+			        </div>
+
+			    {% else %}
+					
+					{% for topic in forum.topics %}
+					
+						{# Gestion des topics non lu si le membre est connecté #}
+						{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+						
+							{% if mark != NULL and (mark.date > topic.lastPost.datePost) %}
+							
+								{% set read = true %}
+							
+							{% else %}
+							
+								{% set viewverif = 0 %}
+								{% for view in views %}
+								    {% if view.message == topic.lastMessage %}
+								        {% set viewverif = 1 %}
+								    {% endif %}
+
+								{% endfor %}
+
+								{% if viewverif == 1 %}
+				                
+				                    {% set read = true %}
+				                
+				                {% else %}
+				                
+				                    {% if topic.lastMessage.date >= thereOneWeek %}
+				                
+				                        {% set read = false %}
+				                        
+				                    {% else %}
+				                
+				                        {% set read = true %}
+				                        
+				                    {% endif %}
+				                    
+				                {% endif %}
+								
+							{% endif %}
+						
+						{% else %}
+							
+							{% set read = true %}
+							
+						{% endif %}
+
+						<div class="col-lg-12 forum-topic{% if read == false %} topic-unread{% endif %}">
+					    
+					    	<div class="row">
+
+						    	<div class="col-lg-1">
+						    		<div class="text-center" style="padding-top: 10px;">
+						    			{% if topic.typeTopic == 'postit' %}<i class="fa fa-thumb-tack"></i>{% endif %}
+						    		</div>
+						    		<div class="text-center">
+						    			{% if topic.topicLock == true %}<i class="fi-lock"></i>{% endif %}
+						    		</div>
+						    	</div>
+
+							    <div class="col-lg-6" style="cursor: pointer;" onClick="parent.location='{{ path('mgn_forum_topic_read', {'slug': topic.slug, 'id': topic.id}) }}'">
+							    	<p class="text-left">
+							    		{% if read == false %}<strong>{% endif %}
+							    		<a href="{{ path('mgn_forum_topic_read', {'slug': topic.slug, 'id': topic.id}) }}"><h5>{{ topic.title }}</h5></a>
+							    		{% if read == false %}</strong>{% endif %}
+							    	</p>
+							    	<p class="text-left">
+							    		<p><em>Par <a href="{{ path('mgn_user_profile', {'username': topic.firstMessage.author.usernameCanonical}) }}">{{ topic.firstMessage.author.username }}</a>, {{ topic.firstMessage.date|datetime }}</em></p>
+							    	</p>
+							    </div>
+
+							    <div class="col-lg-2" style="vertical-align: middle; padding-top: 15px;">
+							    	{% if topic.countPosts <= 1 %}
+							    	{{ topic.countPosts }} message
+							    	{% else %}
+							    	{{ topic.countPosts }} messages
+							    	{% endif %}
+							    </div>
+
+							    <div class="col-lg-3" onClick="parent.location='{{ path('mgn_forum_topic_read', {'id': topic.id, 'slug': topic.slug, 'page': topic.countPosts|pagination}) }}#{{ topic.lastMessage.id }}'" style="cursor: pointer; vertical-align: middle; padding-top: 10px;">
+							    	<em>
+								    	{{ topic.lastMessage.author.avatar|avatar(topic.lastMessage.author.avatarPath, topic.lastMessage.author.email, '40', '')|raw }}
+								    	{{ topic.lastMessage.date|datetime|capitalize }}
+							    	
+						    		</em>
+						    	</div>
+
+						    </div>			
+					    </div>   			
+					    
+					{% endfor %}
+
+				    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+						<p><a href="{{ path('mgn_forum_view', {'forum': forum.slug, 'id': forum.id, 'mark': 'mark'}) }}">Marquer ce forum comme lu.</a><p>
+					{% endif %}
+			    
+				    <p>
+				    	Le nombre total de sujets dans cette catégorie est de : {{ forum.countTopics }}.<br />
+				    	Le nombre de messages est de : {{ forum.countPosts }}.
+				    </p>
+
+				{% endif %}
+			    
+			    {% if (forumAclTopic != 0) and (is_granted("IS_AUTHENTICATED_REMEMBERED")) %}
+
+			        <div class="form-actions">
+			        	
+						<button class="btn btn-primary" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" style="margin-bottom: 20px;">
+					        Poster un nouveau sujet
+					    </button>
+
+						<div id="collapseOne" class="collapse">
+
+							<div class="row">
+
+								<div class="col-lg-12">
+
+									<form action="{{ path('mgn_forum_topic_add', {'forum': forum.id}) }}" method="post" {{ form_enctype(form) }}>
+										
+										<div class="controls">
+									        <div id="viewDiv"></div>
+									    </div>
+									    
+									    <fieldset>
+											{% if form_errors(form) %}
+												<div class="alert alert-block alert-danger fade in">
+													<a class="close" data-dismiss="alert" href="#">&times;</a>
+													{{ form_errors(form) }}
+												</div>
+											{% endif %}
+										</fieldset>
+										
+										<div class="form-group">
+											<label class="control-label" for="prenom">Titre</label>
+											<div class="">
+												{{ form_widget(form.title, { 'attr' : { 'class' : 'form-control', 'placeholder' : 'Ecrivez votre titre ...' } }) }}
+											</div>
+										</div>
+										
+										<div class="form-group">
+											<div>
+
+												{% set url = app.request.schemeAndHttpHost %}
+
+												{{ "mgn_forumbundle_topictype_lastMessage_contents"|mcode('menu', 'article', url)|raw }}
+										        
+												{{ form_widget(form.lastMessage.contents, { 'attr' : { 'class' : 'form-control', 'rows' : '15' } }) }}
+												
+											</div>
+										</div>
+
+										{{ form_widget(form) }}
+										
+										<div class="form-actions">
+											<button class="btn btn-primary" type="submit" id="_submit" name="_submit">Envoyer</button>
+									        <button class="btn btn-primary" type="button" onclick="view('mgn_forumbundle_topictype_lastMessage_contents', 'article', 'viewDiv', '{{ app.request.schemeAndHttpHost }}{{ app.request.getBaseURL() }}');">Visualiser</button>
+										</div>
+
+									</form>
+
+								</div>
+
+							</div>
+
+						</div>
+					</div>
+
+			    {% elseif (forumAclTopic != 0) %}
+
+			        <div class="alert alert-info">
+			            Vous devez être connecté pour pouvoir poster un message sur le forum.
+			        </div>
+
+			    {% else %}
+
+			        <div class="alert">
+			            Vous n'avez pas la permission de créé un sujet dans cette catégorie.
+			        </div>
+
+			    {% endif %}
+
+			</div>
+
+		</div>
+
+	{% endif %}
+
+{% endblock %}

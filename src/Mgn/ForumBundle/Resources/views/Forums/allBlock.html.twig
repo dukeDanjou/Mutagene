@@ -1,0 +1,244 @@
+{% extends "MgnForumBundle::layout.html.twig" %}
+
+{% block title %}Les forums - {{ parent() }}{% endblock %}
+
+{% block arianne %}
+
+    {{ parent() }}
+    <li class="active">Les forums</li>
+
+{% endblock %}
+
+{% block pagetitle %}
+
+    {% if Config('homepage') == 'forum' %}
+
+        {{ Config('siteDescription') }}
+
+    {% else %}
+
+        Les forums
+
+    {% endif %}
+    
+{% endblock %}
+
+{% block body %}
+
+    {% if Theme('forumBundleForumsAllBlock') != null %}
+
+        {% include template_from_string(Theme('forumBundleForumsAllBlock')|raw) %}
+
+    {% else %}
+
+		<div class="row">
+
+			<div class="col-lg-12">
+
+				{% set category = '' %}
+				{% set totalposts = 0 %}
+				{% set totaltopics = 0 %}
+				{% set countForum = 0 %}
+				
+				{% for forum in forums %}
+
+					{% set forumAclView = forum.publicAclView %}
+					
+					{% if forumAclView == true or is_granted('ROLE_FORUM_READ_'~forum.id) %}
+
+						{% if category != forum.category.name %}
+
+					    	{% set category = forum.category.name %}
+
+					    	{% if countForum < Config('forumIndexLigne') and countForum > 0 %}
+								</div>
+								{% set countForum = 0 %}
+							{% endif %}
+
+					    	</section>
+
+					    	<section>
+
+								<h2>{{ forum.category.name }}</h2>
+							
+						{% endif %}
+
+						{% set countForum = countForum + 1 %}
+					
+						{# Gestion des forums non lu si le membre est connecté #}
+						{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+						
+							{# si il y a des post sur la forum #}
+							{% if forum.lastMessage != null %}
+							
+								{% set markverif = 0 %}
+
+								{% for mark in marks %}
+									{% if mark.forum == forum and mark.date > forum.lastMessage.date %}
+										{% set markverif = 1 %}
+									{% endif %}
+								{% endfor %}
+								
+								
+								{% if markverif == 1 %}
+								
+									{% set read = true %}
+								
+								{% else %}
+
+								   {% set read = true %}
+			                       
+			                       {% set forumcheck = 0 %}
+			                       
+								   {% for lastMessage in latestMessages %}
+								       
+			                            {% if lastMessage.forum == forum %}
+			                            
+			                            
+			                                {% if lastMessage == lastMessage.topic.lastMessage %}
+			                                
+			                                    {% set viewcheck = 0 %}
+			                                    
+			                                    {% for view in views %}
+			                                   
+			                                        {% if view.message == lastMessage %}
+			                                            
+			                                            {% set viewcheck = +1 %}
+			                                        {% else %}
+			                                        
+			                                        {% endif %}
+			                                    {% endfor %}
+			                                    
+			                                    {% if viewcheck == 0 %}
+			                                    
+			                                        {% set forumcheck = forumcheck + 1 %}
+			                                    
+			                                    {% endif %}
+			                                   
+			                                {% else %}
+			                                
+			                                {% endif %}
+			                                
+			                            {% endif %}
+			                            
+			                        
+			                        {% endfor %}
+			                        {% if forumcheck != 0 %}
+			                                
+			                            {% set read = false %}
+			                        
+			                        {% else %}
+			                        
+			                            {% set read = true %}
+			                            
+			                        {% endif %}
+			                        
+								{% endif %}
+								
+							{% else %}
+								
+								{% set read = true %}
+							
+							{% endif %}
+						
+						{% else %}
+							
+							{% set read = true %}
+							
+						{% endif %}
+
+						{% if countForum == 1 %}
+							<div class="row">
+						{% endif %}
+
+						{% set spanForum = 'col-lg-'~ 12 / Config('forumIndexLigne') %}
+						
+						<div class="{{ spanForum }}">
+
+							
+
+							{% if read == false %}{% set unread = ' forum-unread' %}{% else %}{% set unread = '' %}{% endif %}
+
+							<div class="col-lg-12 {{ unread }} forum" {% if forum.lastMessage != null %}style="cursor: pointer;"{% endif %}>
+
+								<div class="row">
+
+								<div class="col-lg-12 forum-titre" onClick="parent.location='{{ path('mgn_forum_view', {'forum': forum.slug, 'id': forum.id }) }}'" style="cursor: pointer;">
+						    
+						    		<div>
+
+							    		<h4><a href="{{ path('mgn_forum_view', {'forum': forum.slug, 'id': forum.id }) }}">{{ forum.name }}</a></h4>
+
+							    	</div>
+
+							    	<div>
+
+							    		<small>{{ forum.description }}</small>
+
+							    	</div>
+
+								</div>
+
+								<div class="col-lg-12 forum-dernier-message"{% if forum.lastMessage != null %} onClick="parent.location='{{ path('mgn_forum_topic_read', {'id': forum.lastTopic.id, 'slug': forum.lastTopic.slug, 'page': forum.lastTopic.countPosts|pagination}) }}#{{ forum.lastMessage.id }}'"{% endif %}>
+
+								    {% if forum.lastMessage != null %}
+
+						    		<div>
+
+				    					<a href="{{ path('mgn_forum_topic_read', {'id': forum.lastTopic.id, 'slug': forum.lastTopic.slug, 'page': forum.lastTopic.countPosts|pagination}) }}#{{ forum.lastMessage.id }}">{{ forum.lastMessage.topic.title }}</a>
+
+				    				</div>
+							    	
+							    	{% else %}
+
+							    		<div>Aucun sujet</div>
+
+							    	{% endif %}
+							    	
+							    </div>
+
+							    </div>
+							    
+							</div>		
+					    </div>
+
+					    {% if countForum == Config('forumIndexLigne') %}
+							</div>
+							{% set countForum = 0 %}
+						{% endif %}
+
+						{% if loop.last %}
+							</section>
+						{% endif %}
+		    
+					    {% set totalposts = totalposts + forum.countPosts %}
+						{% set totaltopics = totaltopics + forum.countTopics %}
+
+				    {% endif %}
+
+				{% else %}
+				   
+					    <div class="alert alert-info">
+							Aucun forum n'a été créé.
+						</div>
+						    
+			    {% endfor %}
+
+				{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+
+					<p><a href="{{ path('mgn_forum', {'mark': 'markall'}) }}">Marquer ces forums comme lus.</a></p>
+
+				{% endif %}
+			    
+			    <p>
+			    	Le nombre total de sujets est de : {{ totaltopics }}.<br />
+			    	Le nombre de messages est de : {{ totalposts }}.
+			    </p>
+
+			</div>
+
+		</div>
+
+	{% endif %}
+
+{% endblock %}

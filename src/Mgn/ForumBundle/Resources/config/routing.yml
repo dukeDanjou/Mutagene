@@ -1,0 +1,115 @@
+mgn_forum:
+    pattern:   /forums/{mark}
+    defaults:  { _controller: MgnForumBundle:Forum:all, mark: 'false' }
+
+mgn_forum_view:
+    pattern:   /forums/{id}/{forum}/{page}/{mark}
+    defaults:  { _controller: MgnForumBundle:Forum:view, page: 1, mark: 'false' }
+    requirements:
+        _method:  GET
+        id:  \d+
+
+mgn_forum_topic_read:
+    pattern:   /forums/sujet/{id}/{slug}/{page}
+    defaults:  { _controller: MgnForumBundle:Topic:read, page: 1, postediter: null, topicediter: null, topicfermer: null, postmodo: null }
+    requirements:
+        page:  \d+
+        id:  \d+
+
+mgn_forum_topic_edit:
+    pattern:   /forums/sujet/{id}/{slug}/{page}/topic-editer-{topicediter}
+    defaults:  { _controller: MgnForumBundle:Topic:read, page: 1, postediter: null, topicfermer: null, postmodo: null }
+    requirements:
+        page:  \d+
+        id:  \d+
+        topicediter:  \d+
+
+mgn_forum_topic_lock:
+    pattern:   /forums/sujet/{id}/{slug}/{page}/topic-fermer-{topicfermer}
+    defaults:  { _controller: MgnForumBundle:Topic:read, page: 1, postediter: null, topicediter: null, postmodo: null }
+    requirements:
+        page:  \d+
+        topicfermer:  \d+
+        id:  \d+
+
+mgn_forum_topic_add:
+    pattern:   /forums/action/nouveau-sujet/{forum}
+    defaults:  { _controller: MgnForumBundle:Action:addTopic }
+    requirements:
+        forum:  \d+
+
+mgn_forum_topic_postit:
+    pattern:   /forums/action/epingler-sujet/{topicId}
+    defaults:  { _controller: MgnForumBundle:Action:postitTopic }
+    requirements:
+        topicId:  \d+
+
+mgn_forum_topic_move:
+    pattern:   /forums/action/deplacer-sujet/{topicId}
+    defaults:  { _controller: MgnForumBundle:Action:moveTopic, forumId: null }
+    requirements:
+        topicId:  \d+
+
+mgn_forum_topic_move_select:
+    pattern:   /forums/action/deplacer-sujet/{topicId}/to/{forumId}
+    defaults:  { _controller: MgnForumBundle:Action:moveTopic }
+    requirements:
+        topicId:  \d+
+        forumId:  \d+
+
+mgn_forum_topic_delete:
+    pattern:   /forums/action/supprimer-sujet/{topic}
+    defaults:  { _controller: MgnForumBundle:Action:deleteTopic }
+    requirements:
+        topic:  \d+
+
+mgn_forum_post_edit:
+    pattern:   /forums/sujet/{id}/{slug}/{page}/post-editer-{postediter}
+    defaults:  { _controller: MgnForumBundle:Topic:read, page: 1, topicediter: null, topicfermer: null, postmodo: null }
+    requirements:
+        page:  \d+
+        postediter:  \d+
+        id:  \d+
+
+mgn_forum_post_modo:
+    pattern:   /forums/sujet/{id}/{slug}/{page}/post-modo-{postmodo}
+    defaults:  { _controller: MgnForumBundle:Topic:read, page: 1, topicediter: null, topicfermer: null, postediter: null }
+    requirements:
+        page:  \d+
+        id:  \d+
+        postmodo:  \d+
+
+mgn_forum_post_delete:
+    pattern:   /forums/action/supprimer-post/{postId}/{page}
+    defaults:  { _controller: MgnForumBundle:Action:deletePost }
+    requirements:
+        postId:  \d+
+        page:  \d+
+
+mgn_admin_forum:
+    pattern:   /admin/forums
+    defaults:  { _controller: MgnForumBundle:Admin:forum }
+
+mgn_admin_forum_edit:
+    pattern:   /admin/forums/editer/{id}
+    defaults:  { _controller: MgnForumBundle:Admin:forumEdit }
+    requirements:
+        id:  \d+
+
+mgn_admin_forum_delete:
+    pattern:   /admin/forums/supprimer/{id}
+    defaults:  { _controller: MgnForumBundle:Admin:forumDelete }
+    requirements:
+        id:  \d+
+
+mgn_admin_forum_category_edit:
+    pattern:   /admin/forums/categorie/editer/{id}
+    defaults:  { _controller: MgnForumBundle:Admin:categoryEdit }
+    requirements:
+        id:  \d+
+
+mgn_admin_forum_category_delete:
+    pattern:   /admin/forums/categorie/supprimer/{id}
+    defaults:  { _controller: MgnForumBundle:Admin:categoryDelete }
+    requirements:
+        id:  \d+

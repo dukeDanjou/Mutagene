@@ -1,0 +1,19 @@
+security.login.title: Access to your personal space
+security.login.message: This page allows you to log in as a member. Once connected, you can participate in the life of the site and its community.
+security.login.form.identifying: Identifying
+security.login.form.password: Password
+security.login.form.remember: Remember me
+security.login.form.note: Note
+security.login.form.note.identifying: Your username or email address.
+security.login.form.warning: Warning
+security.login.form.warning.remember: Do not enable this option if you are not on your computer
+security.login.form.button.connect: Login
+security.login.form.button.forget.password: I forgot my password
+security.login.problem: A problem?
+security.login.problem.not.registered: I not registered
+security.login.form.error: Error
+security.login.form.error.message: Bad username and / or password.
+user.ariane.security.login: Login
+user.ariane.registration.register: Registration
+registration.register.title: Register on the site
+registration.register.message: Register to fully enjoy our site. An email will be sent for verification, be careful to tell us a valid email address.

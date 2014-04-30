@@ -1,0 +1,5 @@
+{% for category in categories %}
+	{% if category.countNews != 0 %}
+	<li><a href="{{ path('mgn_article_archives', {'filtre': category.slug}) }}">{{ category.name }} ({{ category.countNews }})</a></li>
+	{% endif %}
+{% endfor %}

@@ -1,0 +1,90 @@
+mgn_article:
+    path:      /articles
+    defaults:  { _controller: MgnArticleBundle:Article:index }
+
+mgn_article_read:
+    pattern:   /article/{id}/{category}/{date}/{slug}
+    defaults:  { _controller: MgnArticleBundle:Article:read }
+    requirements:
+        id:  \d+
+
+mgn_article_add_comment:
+    pattern:   /article/commentaire/ajouter/{id}
+    defaults:  { _controller: MgnMessageBundle:Message:addToArticle }
+    requirements:
+        _method:  POST
+        id:  \d+
+
+mgn_article_archives:
+    pattern:   /articles/archives/{filtre}
+    defaults:  { _controller: MgnArticleBundle:Article:archives, filtre: all }
+
+mgn_admin_article_picture_add:
+    path:      /articles/upload/image
+    defaults:  { _controller: MgnMediaBundle:Article:addPicture }
+
+mgn_admin_article_list:
+    pattern:   /admin/articles/liste/{status}
+    defaults:  { _controller: MgnArticleBundle:Admin:articleList, status: publish }
+
+mgn_admin_article_category:
+    pattern:   /admin/articles/categories
+    defaults:  { _controller: MgnArticleBundle:Admin:category }
+
+mgn_admin_article_category_edit:
+    pattern:   /admin/articles/categories/editer/{id}
+    defaults:  { _controller: MgnArticleBundle:Admin:categoryEdit }
+    requirements:
+        id:  \d+
+
+mgn_admin_article_category_delete:
+    pattern:   /admin/articles/categories/supprimer/{id}
+    defaults:  { _controller: MgnArticleBundle:Admin:categoryDelete }
+    requirements:
+        id:  \d+
+
+mgn_admin_article_delete:
+    pattern:   /admin/article/supprimer/{id}
+    defaults:  { _controller: MgnArticleBundle:Admin:delete }
+    requirements:
+        id:  \d+
+
+mgn_admin_article_redaction:
+    pattern:   /admin/article/redaction
+    defaults:  { _controller: MgnArticleBundle:Admin:redaction }
+
+mgn_admin_article_edition:
+    pattern:   /admin/article/edition/{id}
+    defaults:  { _controller: MgnArticleBundle:Admin:edition }
+    requirements:
+        id:  \d+
+
+mgn_admin_article_edit_title:
+    pattern:   /admin/article/edition/titre/{article}/{action}
+    defaults:  { _controller: MgnArticleBundle:Admin:editTitle, action: null }
+    requirements:
+        article:  \d+
+
+mgn_admin_article_edit_introduction:
+    pattern:   /admin/article/edition/introduction/{article}/{action}
+    defaults:  { _controller: MgnArticleBundle:Admin:editIntroduction, action: null }
+    requirements:
+        article:  \d+
+
+mgn_admin_article_contents:
+    pattern:   /admin/article/contents/{article}/{content}/{type}/{action}
+    defaults:  { _controller: MgnArticleBundle:Admin:contents, action: null }
+    requirements:
+        id:  \d+
+
+mgn_admin_article_contents_delete:
+    pattern:   /admin/article/contentsdelete/{content}
+    defaults:  { _controller: MgnArticleBundle:Admin:contentsDelete }
+    requirements:
+        id:  \d+
+
+mgn_admin_article_contents_sortable:
+    pattern:   /admin/article/contentssortable
+    defaults:  { _controller: MgnArticleBundle:Admin:contentsSortable }
+    requirements:
+        id:  \d+

@@ -1,0 +1,43 @@
+# src/Mgn/CoreBundle/Resources/config/services.yml
+
+services:
+
+    mgn.config:
+        class: Mgn\CoreBundle\Twig\Extension\ConfigExtension
+        arguments: [@doctrine]
+        tags:
+            -  { name: twig.extension }
+
+    mgn.theme:
+        class: Mgn\CoreBundle\Twig\Extension\ThemeExtension
+        arguments: [@security.context, @doctrine, @mgn.config]
+        tags:
+            -  { name: twig.extension }
+
+    mgn.mcode:
+        class: Mgn\CoreBundle\Twig\Extension\MCodeExtension
+        arguments: [@mgn.config]
+        tags:
+            - { name: twig.extension }
+
+    mgn.pagination:
+        class: Mgn\CoreBundle\Twig\Extension\PaginationExtension
+        arguments: [@mgn.config]
+        tags:
+            - { name: twig.extension }
+
+    mgn.datetime:
+        class: Mgn\CoreBundle\Twig\Extension\DatetimeExtension
+        tags:
+            - { name: twig.extension }
+
+    mgn.fileExists:
+        class: Mgn\CoreBundle\Twig\Extension\FileExistsExtension
+        tags:
+            - { name: twig.extension }
+
+    mgn.avatar:
+        class: Mgn\CoreBundle\Twig\Extension\AvatarExtension
+        arguments: [@mgn.theme]
+        tags:
+            - { name: twig.extension }

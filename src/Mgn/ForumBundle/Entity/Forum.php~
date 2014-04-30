@@ -1,0 +1,125 @@
+<?php
+
+namespace Mgn\ForumBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+use Gedmo\Mapping\Annotation as Gedmo;
+
+use Mgn\ForumBundle\Entity\Category;
+use Mgn\MessageBundle\Entity\Message;
+
+/**
+ * Mgn\ForumBundle\Entity\Forum
+ *
+ * @ORM\Table(name="mgn_forum")
+ * @ORM\Entity(repositoryClass="Mgn\ForumBundle\Entity\ForumRepository")
+ */
+class Forum
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var smallint $category
+     *
+     * @ORM\ManyToOne(targetEntity="Mgn\ForumBundle\Entity\Category", inversedBy="forums")
+     */
+    private $category;
+
+    /**
+     * @var string $name
+     *
+     * @ORM\Column(name="name", type="string", length=255)
+     */
+    private $name;
+
+    /**
+    * @Gedmo\Slug(fields={"name"})
+    * @ORM\Column(length=128, unique=true)
+    */
+    private $slug;
+
+    /**
+     * @var text $description
+     *
+     * @ORM\Column(name="description", type="string", length=255, nullable=true)
+     */
+    private $description;
+
+    /**
+     * @var smallint $sort
+     *
+     * @ORM\Column(name="sort", type="smallint")
+     */
+    private $sort;
+
+    /**
+     * @var integer $countPosts
+     *
+     * @ORM\Column(name="countPosts", type="integer")
+     */
+    private $countPosts;
+
+    /**
+     * @var integer $countTopics
+     *
+     * @ORM\Column(name="countTopics", type="integer")
+     */
+    private $countTopics;
+	
+    /**
+     * @var integer $publicAclView
+     *
+     * @ORM\Column(name="publicAclView", type="boolean")
+     */
+    private $publicAclView;
+	
+    /**
+     * @var integer $publicAclPost
+     *
+     * @ORM\Column(name="publicAclPost", type="boolean")
+     */
+    private $publicAclPost;
+	
+    /**
+     * @var integer $publicAclTopic
+     *
+     * @ORM\Column(name="publicAclTopic", type="boolean")
+     */
+    private $publicAclTopic;
+
+    /**
+     * @var integer $lastTopic
+     *
+     * @ORM\OneToOne(targetEntity="Mgn\ForumBundle\Entity\Topic")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $lastTopic;
+
+    /**
+     * @var integer $lastMessage
+     *
+     * @ORM\OneToOne(targetEntity="Mgn\MessageBundle\Entity\Message")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $lastMessage;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Mgn\ForumBundle\Entity\Topic", mappedBy="forum")
+     */
+    private $topics;
+
+    public function __construct()
+    {
+        $this->countPosts = 0;
+        $this->countTopics = 0;
+        $this->sort = 0;
+    }
+}

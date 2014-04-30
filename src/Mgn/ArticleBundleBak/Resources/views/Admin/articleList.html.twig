@@ -1,0 +1,130 @@
+{% extends "MgnArticleBundle::admin.html.twig" %}
+
+{% block title %}
+    Liste des articles - {{ parent() }}
+{% endblock %}
+
+{% block sidebar_articles %}active{% endblock %}
+{% block sidebar_articles_list %}active{% endblock %}
+{% block listinline_articles_all %}active{% endblock %}
+
+{% block body %}
+
+	<div class="row">
+
+		<div class="col-lg-12">
+
+			<div class="page-header">
+				<h1>
+					<i class="fi-pencil"></i> Articles
+				</h1>
+
+			</div>
+
+		</div>
+
+		{% for message in app.session.flashbag.get('success') %}
+		<div class="col-lg-12">
+	        <div class="alert alert-success">
+	        	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+	            {{ message }}
+	        </div>
+        </div>
+        {% endfor %}
+
+        <div class="col-lg-12">
+
+        	{% if articles is empty %}
+
+		        <div class="alert alert-info">
+		            Commencez à rédiger votre premier article !
+		        </div>
+
+		    {% else %}
+
+		    	<ul class="list-inline text-muted">
+					<li>
+						{% if status == 'all' %}
+						<strong>Tous</strong>
+						{% else %}
+						<a href="{{ path('mgn_admin_article_list', {'status': 'all'}) }}">Tous</a>
+						{% endif %} (0)
+					</li>
+					<li>|</li>
+					<li>
+						{% if status == 'publies' %}
+						<strong>Publiés</strong>
+						{% else %}
+						<a href="{{ path('mgn_admin_article_list', {'status': 'publies'}) }}">Publiés</a>
+						{% endif %} (0)
+					</li>
+					<li>|</li>
+					<li>
+						{% if status == 'brouillons' %}
+						<strong>Brouillons</strong>
+						{% else %}
+						<a href="{{ path('mgn_admin_article_list', {'status': 'brouillons'}) }}">Brouillons</a>
+						{% endif %} (0)
+					</li>
+				</ul>
+		        
+		        <table class="table table-striped table-hover">
+		            <thead>
+		                <tr>
+		                    <th>Titre</th>
+		                    <th>Auteur</th>
+		                    <th>Catégories</th>
+		                    <th><i class="fi-comment"/></i></th>
+		                    <th>Date</th>
+		                </tr>
+		            </thead>
+		            <tbody>
+		                {% for article in articles %}
+		                
+		                <tr>
+		                    <td>
+		                    	<a href="{{ path('mgn_admin_article_edition', {'id': article.id}) }}"><strong>{{ article.title }}</strong></a>{% if article.status == 0 %} - Brouillon{% endif %}</br>
+		                    	<span class="hidde">
+		                    		<small>
+		                    			<a href="{{ path('mgn_admin_article_edition', {'id': article.id}) }}">Modifier</a> | <a href="#modalDelete{{ article.id }}" role="button" class="text-danger" data-toggle="modal">Mettre à la corbeille</a> | {% if article.status == 0 %}Aperçu{% else %}Afficher{% endif %}
+		                    		</small>
+		                    	</span>
+		                    </td>
+		                    <td>{{ article.author.username }}</td>
+		                    <td>{{ article.category.name }}</td>
+		                    <td>{{ article.countComments }}</td>
+		                    <td>
+		                    	{{ article.date|datetime }}</br>
+		                    	{% if article.status == 0 %}Dernière modification{% else %}Publié{% endif %}
+		                    </td>
+		                </tr>
+
+		                <!-- Modal -->
+		                <div id="modalDelete{{ article.id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		                	<div class="modal-dialog">
+		                		<div class="modal-content">
+		                			<div class="modal-header">
+		                				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		                				<h4 class="modal-title" id="myModalLabel">Supprimer l'article #{{ article.id }}</h4>
+									</div>
+									<div class="modal-body">
+										Etes-vous sûr de vouloir supprimer l'article #{{ article.id }} ayant pour titre "{{ article.title }}" ? Cette action est irréversible !
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+										<a class="btn btn-primary" href="{{ path('mgn_admin_article_delete', {'id': article.id}) }}">Supprimer</a>
+									</div>
+								</div><!-- /.modal-content -->
+							</div><!-- /.modal-dialog -->
+						</div><!-- /.modal -->
+		                
+		                {% endfor %}
+		            </tbody>
+		        </table>
+		    {% endif %}
+
+        </div>
+
+	</div>
+
+{% endblock %}

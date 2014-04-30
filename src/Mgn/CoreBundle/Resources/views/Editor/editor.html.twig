@@ -1,0 +1,52 @@
+{% extends "MgnCoreBundle:Theme:editor.html.twig" %}
+
+{% block editor_select %}
+	{% if file == 'articleBundleArticleIndex' %}
+		Articles - Index des articles
+	{% elseif file == 'articleBundleArticleRead' %}
+		Articles - Lire un article
+	{% elseif file == 'articleBundleLayout' %}
+		Articles - Layout
+	{% endif %}
+{% endblock %}
+
+{% block editor_contents %}
+
+<div class="row">
+
+	{% for message in app.session.flashbag.get('success') %}
+	<div class="col-lg-12">
+	    <div class="alert alert-success">
+	    	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+	        {{ message }}
+	    </div>
+	</div>
+	{% endfor %}
+
+	<div class="col-lg-12">
+
+		<form method="post" {{ form_enctype(form) }} role="form">
+
+		   	<div class="form-group">
+
+		   		{% if file == 'articleBundleArticleIndex' %}
+                	{{ form_widget(form.articleBundleArticleIndex, { 'id' : 'mgn_corebundle_Editortype', 'attr' : { 'class' : 'form-control codeHtml', 'rows' : '30' } }) }}
+                {% elseif file == 'articleBundleArticleRead' %}
+                	{{ form_widget(form.articleBundleArticleRead, { 'id' : 'mgn_corebundle_Editortype', 'attr' : { 'class' : 'form-control codeHtml', 'rows' : '30' } }) }}
+                {% elseif file == 'articleBundleLayout' %}
+                	{{ form_widget(form.articleBundleLayout, { 'id' : 'mgn_corebundle_Editortype', 'attr' : { 'class' : 'form-control codeHtml', 'rows' : '30' } }) }}
+                {% endif %}
+
+		    </div>
+
+		    {{ form_rest(form) }}
+
+		    <button class="btn btn-primary" type="submit" id="_submit" name="_submit">Mettre à jour le fichier</button>
+
+		</form>
+
+	</div>
+
+</div>
+
+{% endblock %}

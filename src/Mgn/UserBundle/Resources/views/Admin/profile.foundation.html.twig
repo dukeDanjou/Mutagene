@@ -1,0 +1,31 @@
+{% block body %}
+
+<div class="row">
+
+	<div class="large-12 columns" style="border-bottom: 4px solid #fff; height: 74px; padding-top: 16px;" id="load_header_dynamic">
+
+		<span data-tooltip class="has-tip tip-bottom" title="Administrer {{ user.username }}"><i class="fi-widget right button tiny disabled"></i></span>
+
+	</div>
+
+	<div class="large-12 columns">
+
+		<h1>{{ 'user.user_profil.profile'|trans }} {{ user.username }}</h1>
+
+		<p>
+
+			<ul class="no-bullet">
+				<li>{{ 'user.user_profil.date_registered'|trans }} : {{ user.registered|date('d/m/Y') }}</li>
+				<li>{{ 'user.user_profil.date_last_login'|trans }} : {{ user.lastLogin|date('d/m/Y') }}</li>
+				<li>{{ 'user.user_profil.email'|trans }} : {{ user.email }}</li>
+				<li>{{ 'user.user_profil.theme'|trans }} : {{ user.theme }}</li>
+				<li>{{ 'user.user_profil.status'|trans }} : {% if user.locked == false %}<span class="text-success">{{ 'user.users_list.unlocked'|trans }}</span>{% else %}<span class="text-danger">{{ 'user.users_list.locked'|trans }}</span>{% endif %}</li>
+			</ul>
+
+		</p>
+
+	</div>
+
+</div>
+	
+{% endblock %}

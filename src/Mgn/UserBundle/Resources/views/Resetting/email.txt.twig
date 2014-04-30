@@ -1,0 +1,7 @@
+Bonjour {{ username }},
+
+Une demande de récupération de compte viens d'être enregistré sur notre site, pour poursuivre la procédure, merci de cliquer sur le lien 
+{{ url('mgn_user_resetting_confirmation', { 'email': email, 'token': confirmationToken }) }}
+
+Cordialement,
+L'équipe.

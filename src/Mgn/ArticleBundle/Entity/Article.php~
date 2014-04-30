@@ -1,0 +1,160 @@
+<?php
+
+namespace Mgn\ArticleBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+use Doctrine\Common\Collections\ArrayCollection;
+
+use Gedmo\Mapping\Annotation as Gedmo;
+
+/**
+ * Article
+ *
+ * @ORM\Entity
+ * @ORM\Table(name="mgn_article")
+ * @ORM\Entity(repositoryClass="Mgn\ArticleBundle\Entity\ArticleRepository")
+ * @ORM\HasLifecycleCallbacks()
+ */
+class Article
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var integer $author
+     *
+     * @ORM\ManyToOne(targetEntity="Mgn\UserBundle\Entity\User")
+     */
+    private $author;
+
+    /**
+     * @var integer $category
+     *
+     * @ORM\ManyToOne(targetEntity="Mgn\ArticleBundle\Entity\Category", inversedBy="articles")
+     */
+    private $category;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="datetime")
+     */
+    private $date;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="dateTop", type="datetime")
+     */
+    private $dateTop;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=255)
+     */
+    private $title;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="url", type="string", length=255)
+     */
+    private $url;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="header", type="string", length=255, nullable=true)
+     */
+    private $header;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="introduction", type="text", nullable=true)
+     */
+    private $introduction;
+
+    /**
+     * @var integer $contents
+     *
+     * @ORM\OneToMany(targetEntity="Mgn\ContentBundle\Entity\Content", mappedBy="article")
+     */
+    private $contents;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="comments", type="boolean")
+     */
+    private $comments;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="status", type="string", length=255)
+     */
+    private $status;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="countViews", type="bigint")
+     */
+    private $countViews;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="countComments", type="bigint")
+     */
+    private $countComments;
+    
+    /**
+     * @var integer $idLastComment
+     *
+     * @ORM\OneToOne(targetEntity="Mgn\MessageBundle\Entity\Message")
+     */
+    private $idLastComment;
+    
+    /**
+     * @var datetime $dateLastComment
+     *
+     * @ORM\Column(name="dateLastComment", type="datetime", nullable=true)
+     */
+    private $dateLastComment;
+
+    /**
+     * @var integer $userLastComment
+     *
+     * @ORM\ManyToOne(targetEntity="Mgn\UserBundle\Entity\User")
+     */
+    private $userLastComment;
+
+    /**
+    * @Gedmo\Slug(fields={"url"})
+    * @ORM\Column(length=128, unique=true)
+    */
+    private $slug;
+
+    public function __construct()
+    {
+        $datetime = new \Datetime();
+        $this->date = $datetime;
+        $this->dateTop = $datetime;
+        $this->countViews = 0;
+        $this->countComments = 0;
+        $this->comments = true;
+        $this->status = 'draft';
+        $this->title = 'Sans titre';
+        $this->contents = new ArrayCollection();
+    }
+}

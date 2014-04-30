@@ -1,0 +1,33 @@
+security:
+    encoders:
+        Mgn\UserBundle\Entity\User: sha512
+
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ARTICLE_AUTHOR, ROLE_ALLOWED_TO_SWITCH]
+
+    providers:
+        main:
+            entity: { class: Mgn\UserBundle\Entity\User }
+
+    firewalls:
+        secured_area_fr:
+            pattern:    ^/
+            form_login:
+                check_path: /login_check
+                login_path: /membres/connexion
+                use_referer: true
+            logout:
+                path:  /logout
+                target: /
+            anonymous: ~
+            provider:  main
+            remember_me:
+                key:      "%secret%"
+                lifetime: 31536000 # 365 jours en secondes
+                path:     /
+                domain:   ~ # Prend la valeur par défaut du domaine courant depuis $_SERVER
+
+    access_control:
+        - { path: /action, roles: ROLE_USER }
+        - { path: /admin, roles: ROLE_ADMIN }

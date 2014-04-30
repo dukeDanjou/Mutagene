@@ -1,0 +1,62 @@
+{% extends "MgnUserBundle::layout.html.twig" %}
+
+{% block arianne %}
+    {{ parent() }}
+    </li>
+    <li class="active">
+        {{ 'user.ariane.resetting'|trans }}
+    </li>
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+
+    <div class="col-lg-12">
+
+        <div class="page-header">
+            <h1>{{ 'user.requesting.request.title'|trans }}</h1>
+        </div>
+
+        <p>{{ 'user.requesting.request.message'|trans }}</p>
+
+        {% if invalid_username is defined %}
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                {{ 'resetting.request.invalid_username'|trans }} "{{ invalid_username }}"
+            </div>
+        {% endif %}
+
+        {% if invalid_reset is defined %}
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                {{ 'resetting.request.invalid_reset'|trans }}
+            </div>
+        {% endif %}
+
+        <form role="form" action="{{ path('mgn_user_resetting_send_email') }}" method="post" class="form-horizontal">
+
+            <div class="form-group">
+                <label class="col-lg-2 control-label" for="username">{{ 'security.login.form.identifying'|trans }}</label>
+                <div class="col-lg-8">
+                    <input id="username" class="form-control" type="text" size="30" name="username">
+                    <p class="help-block">
+                    <strong>{{ 'user.requesting.request.form.warning'|trans }} :</strong>
+                    {{ 'user.requesting.request.form.warning.texte'|trans }}
+                    </p>
+                </div>
+            </div> 
+
+            <div class="form-group">
+                <div class="col-lg-offset-3 col-lg-6">
+                    <button class="btn btn-primary" type="submit">{{ 'user.button.requesting_submit'|trans }}</button>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

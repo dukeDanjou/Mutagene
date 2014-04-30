@@ -1,0 +1,83 @@
+{% extends "MgnUserBundle::admin.html.twig" %}
+
+{% block title %}
+    {{ 'user.users_list.title'|trans }} - {{ parent() }}
+{% endblock %}
+
+{% block arianne %}
+    {{ parent() }}
+        </li>
+        <li>
+            {{ 'user.ariane.users_list'|trans }}
+{% endblock %}
+
+{% block sidebar_users %}active{% endblock %}
+{% block sidebar_users_all %}select{% endblock %}
+
+{% block body %}
+
+	<div class="row">
+
+		<div class="col-lg-12">
+
+			<div class="page-header">
+				<h1>
+					<i class="fi-torsos-all"></i> Liste des membres
+
+					<button type="button" disabled="disabled" class="btn btn-primary pull-right" data-toggle="tooltip" data-placement="bottom" title="{{ 'user.form.users_list.addUser'|trans }}" data-original-title="{{ 'user.form.users_list.addUser'|trans }}"><i class="fi-plus"></i></button>
+				</h1>
+			</div>
+
+		</div>
+
+		<div class="col-lg-12">
+
+			<div class="table-responsive">
+
+				<table class="table table-hover">
+
+					<thead>
+
+						<tr>
+
+							<th>Pseudo</th>
+							<th>Email</th>
+							<th>Date d'inscription</th>
+							<th>Dernière connection</th>
+							<th>Status</th>
+							<th>Actions</th>
+
+						</tr>
+
+					</thead>
+
+					<tbody>
+
+						{% for user in users_list %}
+
+							<tr>
+
+								<td>{{ user.username }}</td>
+								<td><a href="mailto:{{ user.email }}">{{ user.email }}</a></td>
+								<td>{{ user.registered|date('d/m/Y') }}</td>
+								<td>{{ user.lastLogin|date('d/m/Y') }}</td>
+								<td>{% if user.locked == false %}<span class="text-success">{{ 'user.users_list.unlocked'|trans }}</span>{% else %}<span class="text-danger">{{ 'user.users_list.locked'|trans }}</span>{% endif %}</td>
+								<td>
+									<button type="button" disabled="disabled" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ 'user.form.users_list.addUser'|trans }}" data-original-title="{{ 'user.form.users_list.addUser'|trans }}"><i class="fi-widget"></i></button>
+								</td>
+
+							</tr>
+
+						{% endfor %}
+
+					</tbody>
+
+				</table>
+
+			</div>
+
+		</div>
+		
+	</div>
+
+{% endblock %}

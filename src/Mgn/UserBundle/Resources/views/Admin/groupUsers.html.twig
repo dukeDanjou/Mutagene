@@ -1,0 +1,176 @@
+{% extends "MgnUserBundle::admin.html.twig" %}
+
+{% block title %}
+    {{ 'user.groups_list.title'|trans }} - {{ parent() }}
+{% endblock %}
+
+{% block sidebar_groups %}active{% endblock %}
+
+{% block body %}
+
+	<div class="row">
+
+		<div class="col-lg-12">
+
+			<div class="page-header">
+				<h1>
+
+					{{ group.name }}
+
+					 <small>Liste des membres</small>
+
+					<button type="button" class="btn btn-primary pull-right tips" data-toggle="modal" data-target="#ModalAddUser" data-placement="left" title="Ajouter un membre" data-original-title="Ajouter un membre" data-container="body"><i class="fi-plus"></i></button>
+
+				</h1>
+
+				<!-- Modal -->
+				<div class="modal fade" id="ModalAddUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+
+							<form name="" role="form" method="post" {{ form_enctype(form) }}>
+
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+								<h4 class="modal-title" id="myModalLabel">Ajouter un membre</h4>
+							</div>
+							<div class="modal-body">
+
+								<div class="form-group{% if form_errors(form.user) %} has-error{% endif %}">
+
+									<label for="mgn_userbundle_groupaddusertype_user" class="control-label">Membre</label>
+									{{ form_widget(form.user, { 'attr' : { 'class' : 'form-control' } }) }}
+
+								</div>
+
+								<div class="form-group{% if form_errors(form.function) %} has-error{% endif %}">
+
+									<label for="mgn_userbundle_groupaddusertype_function" class="control-label">Fonction</label>
+									{{ form_widget(form.function, { 'attr' : { 'class' : 'form-control' } }) }}
+
+								</div>
+
+								{{ form_rest(form) }}
+								
+							</div>
+							<div class="modal-footer">
+								<button type="submit" class="btn btn-primary">Ajouter</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+							</div>
+
+							</form>
+
+						</div><!-- /.modal-content -->
+					</div><!-- /.modal-dialog -->
+				</div><!-- /.modal -->
+
+			</div>
+
+		</div>
+
+		<div class="col-lg-12">
+
+			{% for message in app.session.flashbag.get('successUser') %}
+	        <div class="alert alert-success">
+	        	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+	            {{ message }}
+	        </div>
+	        {% endfor %}
+
+			{% if group.users is empty %}
+
+				<div class="alert alert-info">
+					Aucun membre ne fait partie de ce groupe
+				</div>
+
+			{% else %}
+
+			<div class="table-responsive">
+
+				<table class="table table-hover">
+
+					<thead>
+
+						<tr>
+
+							<th>Pseudo</th>
+							<th>Fonction</th>
+							<th>Action</th>
+
+						</tr>
+
+					</thead>
+
+					<tbody>
+
+						{% for user in group.users %}
+
+							<tbody>
+
+								<tr>
+
+									<td>{{ user.user.username }}</td>
+									<td>{{ user.function }}</td>
+									<td>
+										<button disabled="disabled" type="button" class="btn btn-primary btn-sm tips" title="Editer" data-placement="left" data-toggle="modal" data-target="#ModalEditUser{{ user.user.id }}"><i class="fi-widget"></i></button>
+
+										<!-- Modal -->
+										<div class="modal fade" id="ModalEditUser{{ user.user.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+											<div class="modal-dialog">
+												<div class="modal-content">
+													<div class="modal-header">
+														<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+														<h4 class="modal-title" id="myModalLabel">Editer {{ user.user.username }}</h4>
+													</div>
+													<div class="modal-body">
+														
+													</div>
+													<div class="modal-footer">
+														<a type="button" class="btn btn-primary" href="{{ path('mgn_user_admin_user_delete_to_group', { 'groupid': group.id, 'userid': user.user.id }) }}">Mettre à jour</a>
+														<button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+													</div>
+												</div><!-- /.modal-content -->
+											</div><!-- /.modal-dialog -->
+										</div><!-- /.modal -->
+
+										<button type="button" class="btn btn-default btn-sm tips" title="Expulser" data-placement="right" data-toggle="modal" data-target="#ModalDeleteUser{{ user.user.id }}"><i class="fi-trash"></i></button>
+
+										<!-- Modal -->
+										<div class="modal fade" id="ModalDeleteUser{{ user.user.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+											<div class="modal-dialog">
+												<div class="modal-content">
+													<div class="modal-header">
+														<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+														<h4 class="modal-title" id="myModalLabel">Expulser {{ user.user.username }}</h4>
+													</div>
+													<div class="modal-body">
+														Etes vous sur de vouloir expulser {{ user.user.username }} du groupe {{ group.name }} ?
+													</div>
+													<div class="modal-footer">
+														<a type="button" class="btn btn-danger" href="{{ path('mgn_user_admin_user_delete_to_group', { 'groupid': group.id, 'userid': user.user.id }) }}">Expulser</a>
+														<button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+													</div>
+												</div><!-- /.modal-content -->
+											</div><!-- /.modal-dialog -->
+										</div><!-- /.modal -->
+									</td>
+
+								</tr>
+
+							</tbody>
+
+						{% endfor %}
+
+					</tbody>
+
+				</table>
+
+			</div>
+
+			{% endif %}
+
+		</div>
+		
+	</div>
+
+{% endblock %}

@@ -1,0 +1,40 @@
+core:
+
+    flash:
+
+        success:
+
+            parameters_update: Les paramètres ont bien été mis à jour.
+
+    ariane:
+
+        parameters: Paramètres du site
+        themes_list: Liste des thèmes
+
+    button:
+
+        update: Mettre à jour
+
+    form:
+
+        legend:
+
+            modules: Activation des modules
+
+        parameters:
+
+            site_title: Titre du site
+            site_description: Description
+            email: Email de contact
+            forum: Activer le forum
+            article: Activer les articles
+
+    parameters:
+
+        title: Paramètres du site
+        message: Vous êtes sur la page de configuration des paramètres de votre site.
+    
+    themes_list:
+
+        title: Liste des thèmes
+        message: Voici la liste des thèmes disponible pour votre site, vous pouvez les modifier ou en créer de nouveau.

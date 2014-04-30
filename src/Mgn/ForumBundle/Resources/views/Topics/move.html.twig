@@ -1,0 +1,83 @@
+{% extends "MgnForumBundle::layout.html.twig" %}
+
+{% block title %}Déplacer "{{ topic.title }}" - {{ parent() }}{% endblock %}
+
+{% block arianne %}
+
+	{{ parent() }}
+	<li>{{ topic.forum.category.name }}</li>
+	<li><a href="{{ path('mgn_forum_view', {'id': topic.forum.id, 'forum': topic.forum.slug}) }}">{{ topic.forum.name }}</a></li>
+	<li class="active">Déplacer "{{ topic.title }}"</li>
+
+{% endblock %}
+
+{% block pagetitle %}
+
+    Déplacer "{{ topic.title }}"
+    
+{% endblock %}
+
+{% block body %}
+
+	<div class="row">
+
+		<div class="col-lg-12">
+
+			<p>Veuillez sélectionner la nouvelle catégorie du sujet "{{ topic.title }}", celui-ci y sera déplacer et marquer comme non lu pour tout les membres du site.</p>
+
+			<table class="table table-hover">
+
+				{% set category = '' %}
+
+				{% for forum in forums %}
+
+					{% set forumAclVoir = forum.publicAclView %}
+					
+					{% if forumAclVoir != 0 or is_granted('ROLE_FORUM_READ_'~forum.id) %}
+						{% if category != forum.category.name %}
+						
+							{% set category = forum.category.name %}
+							
+						    <thead>
+							    <tr>
+								    <th colspan="1">
+								    	{{ forum.category.name|upper }}
+								    </th>
+								    <th>Sujets</th>
+								    <th>Messages</th>
+								    <th>Sélectionner</th>
+							    </tr>
+							</thead>
+							
+						{% endif %}
+
+						<tbody>
+						    
+						    	<tr>
+							    	<td>
+								    	<p><a href="{{ path('mgn_forum_view', {'id': forum.id, 'forum': forum.slug}) }}"><strong>{{ forum.name }}</strong></a></p>
+								    	<em>{{ forum.description }}</em>
+								    </td>
+								    <td>{{ forum.countTopics }}</td>
+								    <td>{{ forum.countPosts }}</td>
+								    <td>
+								    	<a href="{{ path('mgn_forum_topic_move_select', {'topicId': topic.id, 'forumId': forum.id}) }}"><i class="fa fa-sign-in"></i> Déplacer ici</a>
+								    </td>
+							    </tr>			
+					    </tbody>
+
+					{% endif %}
+
+				{% endfor %}
+
+			</table>
+
+			<div class="form-actions">
+		        <a class="btn btn-primary" href ="{{ path('mgn_forum_topic_read', {'id': topic.id, 'slug': topic.slug }) }}">Annuler le déplacement</a>
+		    </div>
+
+		</div>
+
+	</div>
+
+{% endblock %}

@@ -1,0 +1,119 @@
+{% block sidebar_groups %}active{% endblock %}
+
+{% block body %}
+
+<div class="row">
+
+	<div class="col-lg-12" style="background-color: #f0f0f0; border-bottom: 4px solid #555; padding-top: 16px; height: 74px;">
+
+		<div class="row">
+
+			<div class="col-lg-10">
+
+				<h1 style="margin:0px;"><i class="fi-torsos-all"></i> {{ group.name }}</h1>
+
+			</div>
+
+			<div class="col-lg-2">
+
+				<a type="button" class="btn btn-primary pull-right tips" data-toggle="tooltip" data-placement="left" title="Administrer" data-original-title="Administrer" href="{{ path('mgn_user_admin_group_administer', { 'id': group.id }) }}"><i class="fi-widget"></i></a>
+
+				<script><!--$('.tips').tooltip();--></script>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="col-lg-12">
+
+		<div class="row">
+
+			<div class="col-lg-12">
+
+				<div class="page-header">
+
+					<h3>Description</h3>
+
+				</div>
+
+				<p>
+
+					{% if group.description is empty %}
+
+						<div class="alert alert-info">
+							Aucune description de disponible
+						</div>
+
+					{% else %}
+
+						{{ group.description }}
+
+					{% endif %}
+
+				</p>
+
+			</div>
+
+		</div>
+
+		<div class="row">
+
+			<div class="col-lg-12">
+
+				<div class="page-header">
+
+					<h3>Membres</h3>
+
+				</div>
+
+				{% if group.users is empty %}
+
+					<div class="alert alert-info">
+						Aucun membre ne fait partie de ce groupe
+					</div>
+
+				{% else %}
+
+				<table class="table">
+
+					<thead>
+
+						<tr>
+
+							<th>Pseudo</th>
+							<th>Fonction</th>
+
+						</tr>
+
+					</thead>
+
+					{% for user in group.users %}
+
+						<tbody>
+
+							<tr>
+
+								<td>{{ user.user.username }}</td>
+								<td>{{ user.function }}</td>
+
+							</tr>
+
+						</tbody>
+
+					{% endfor %}
+
+				</table>
+
+				{% endif %}	
+
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+	
+{% endblock %}

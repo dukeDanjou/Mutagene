@@ -1,0 +1,25 @@
+<form id="form_title_{{ article.id }}" action="{{ path('mgn_admin_article_edit_introduction', {'article': article.id, 'action': 'save'}) }}" method="post" {{ form_enctype(form_article) }} class="form-horizontal" role="form" style="padding-top: 25px; padding-bottom: 20px;">
+
+    <div class="form-group">
+
+	    <div class="col-lg-12">
+	        
+	        <label for="mgn_articlebundle_articletype_contenu">Introduction de l'article <span class="text-danger">*</span> <img class="loader" src="{{ asset('admin/img/ajax-loader.gif') }}" title="" /></label>
+
+	        {{ form_widget(form_article.introduction, { 'attr' : { 'class' : 'form-control form textarea_elastic' } }) }}
+
+	    </div>
+
+    </div>
+        
+    {{ form_rest(form_article) }}
+
+	<div class="pull-right">
+
+		<button type="button" class="btn btn-default btn-sm article-content-cancel" style="margin-bottom: 20px;" data-path="{{ path('mgn_admin_article_edit_introduction', {'article': article.id, 'action': 'cancel'}) }}">Annuler</button>
+
+		<button type="button" class="btn btn-primary btn-sm article-content-save" style="margin-bottom: 20px;">Enregistrer</button>
+
+	</div>
+
+</form>

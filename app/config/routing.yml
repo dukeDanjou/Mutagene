@@ -1,0 +1,35 @@
+mgn_core:
+    resource: "@MgnCoreBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mgn_media:
+    resource: "@MgnMediaBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mgn_admin:
+    resource: "@MgnAdminBundle/Resources/config/routing.fr.yml"
+    prefix:   /
+
+mgn_user:
+    resource: "@MgnUserBundle/Resources/config/routing.fr.yml"
+    prefix:   /
+
+mgn_article:
+    resource: "@MgnArticleBundle/Resources/config/routing.fr.yml"
+    prefix:   /
+
+mgn_content:
+    resource: "@MgnContentBundle/Resources/config/routing.fr.yml"
+    prefix:   /
+
+mgn_forum:
+    resource: "@MgnForumBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mgn_message:
+    resource: "@MgnMessageBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mgn_home:
+    resource: "@MgnHomeBundle/Resources/config/routing.yml"
+    prefix:   /

@@ -1,0 +1,155 @@
+{% extends "MgnArticleBundle::admin.html.twig" %}
+
+{% block title %}
+    Liste des articles - {{ parent() }}
+{% endblock %}
+
+{% block sidebar_articles %}active{% endblock %}
+{% block sidebar_articles_category %}active{% endblock %}
+
+{% block body %}
+
+	<div class="row">
+	
+		<div class="col-lg-12">
+
+			<div class="page-header">
+
+				<h1><i class="fi-pencil"></i> Catégories des articles</h1>
+
+			</div>
+
+		</div>
+
+		{% for message in app.session.flashbag.get('success') %}
+		<div class="col-lg-12">
+	        <div class="alert alert-success">
+	        	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+	            {{ message }}
+	        </div>
+        </div>
+        {% endfor %}
+
+        <div class="col-lg-4">
+
+        	<form name="" role="form" method="post" {{ form_enctype(form) }}>
+
+				<h3>Ajouter une catégorie</h3>
+
+				<hr />
+
+				<div class="form-group{% if form_errors(form.name) %} has-error{% endif %}">
+
+					<label for="mgn_userbundle_grouptype_name">Nom</label>
+
+					{{ form_widget(form.name, { 'attr' : { 'class' : 'form-control' } }) }}
+
+					<p class="help-block">Ce nom est utilisé un peu partout sur votre site.</p>
+
+				</div>
+
+				<div class="form-group{% if form_errors(form.url) %} has-error{% endif %}">
+
+					<label for="mgn_userbundle_grouptype_url">Identifiant</label>
+
+					{{ form_widget(form.url, { 'attr' : { 'class' : 'form-control' } }) }}
+
+					<p class="help-block">L’identifiant est la version normalisée du nom. Il ne contient généralement que des lettres minuscules non accentuées, des chiffres et des traits d’union.</p>
+
+				</div>
+
+				<div class="form-group{% if form_errors(form.description) %} has-error{% endif %}">
+
+					<label for="mgn_userbundle_grouptype_description">Description</label>
+
+					{{ form_widget(form.description, { 'attr' : { 'class' : 'form-control', 'rows' : '5' } }) }}
+
+					<p class="help-block">La description n’est pas très utilisée par défaut, cependant de plus en plus de thèmes l’affichent.</p>
+
+				</div>
+
+				{{ form_rest(form) }}
+
+				<div class="form-actions">
+
+	                <button type="submit" class="btn btn-primary">Ajouter une nouvelle catégorie</button>
+
+	            </div>
+					
+
+			</form>
+
+        </div>
+
+        <div class="col-lg-8">
+
+        	{% if categories is empty %}
+
+		        <div class="alert alert-info">
+		            Aucune catégorie n'a été défini sur ce site.
+		        </div>
+
+		    {% else %}
+		        
+		        <table class="table table-striped table-hover">
+		            <thead>
+		                <tr>
+		                    <th>Nom</th>
+		                    <th>Description</th>
+		                    <th>Identifiant</th>
+		                    <th>Articles</th>
+		                </tr>
+		            </thead>
+		            <tbody>
+		                {% for category in categories %}
+		                
+		                <tr>
+		                    <td>
+		                    	<strong class="text-primary">{{ category.name }}</strong></br>
+		                    	<span class="hidde">
+		                    		<small>
+		                    			{% if category.slug == 'non-classe' %}
+		                    			<span class="text-muted">Catégorie par défaut</span> | <span class="text-muted">Afficher</span>
+		                    			{% else %}
+		                    			<a href="{{ path('mgn_admin_article_category_edit', {'id': category.id}) }}">Modifier</a> | <a href="#modalDelete{{ category.id }}" role="button" class="text-danger" data-toggle="modal">Supprimer la catégorie</a> | <span class="text-muted">Afficher</span>
+		                    			{% endif %}
+		                    		</small>
+		                    	</span>
+		                    </td>
+		                    <td></td>
+		                    <td>{{ category.slug }}</td>
+		                    <td>{{ category.countNews }}</td>
+		                </tr>
+
+		                <!-- Modal -->
+		                <div id="modalDelete{{ category.id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		                	<div class="modal-dialog">
+		                		<div class="modal-content">
+		                			<div class="modal-header">
+		                				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		                				<h4 class="modal-title" id="myModalLabel">Supprimer la catégorie</h4>
+									</div>
+									<div class="modal-body">
+										Etes-vous sûr de vouloir supprimer la catégorie "{{ category.name }}" ? Cette action est irréversible !
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+										<a class="btn btn-danger" href="{{ path('mgn_admin_article_category_delete', {'id': category.id}) }}" disabled="disabled">Supprimer</a>
+									</div>
+								</div><!-- /.modal-content -->
+							</div><!-- /.modal-dialog -->
+						</div><!-- /.modal -->
+		                
+		                {% endfor %}
+		            </tbody>
+		        </table>
+
+		        <p class="help-block"><strong>À savoir :</strong> supprimer une catégorie ne supprime pas les articles qu’elle contient. Les articles affectés uniquement à la catégorie supprimée seront affectés à celle par défaut : <strong>Non classé.</strong></p>
+
+		    {% endif %}
+
+        </div>
+
+	</div>
+
+{% endblock %}

@@ -1,0 +1,173 @@
+{% extends "MgnArticleBundle::admin.html.twig" %}
+
+{% block title %}
+    Rédaction d'un article - {{ parent() }}
+{% endblock %}
+
+{% block sidebar_articles %}active{% endblock %}
+{% block sidebar_articles_writenext %}active{% endblock %}
+
+{% block body %}
+
+	<div class="row">
+
+		<div class="col-lg-12">
+
+			<section class="panel">
+
+				<header class="panel-heading">
+
+					<h4><i class="fi-pencil"></i> Rédaction d'article</h4>
+
+				</header>
+
+			</section>
+
+			<div class="alert alert-success">
+	        	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+	            Cliquez sur un élément pour le modifier.
+	        </div>
+
+			<section id="" class="panel">
+
+				<div class="panel-body">
+
+					<h1 id="article-edit-title" class="article-content-edit" style="color: #ff6c5f; font-weight: bold; margin-bottom: 20px;" data-path="{{ path('mgn_admin_article_edit_title', {'article': article.id, 'action': 'edit'}) }}">{{ article.title }} <img class="loader" src="{{ asset('admin/img/ajax-loader.gif') }}" title="" /></h1>
+
+					{% if article.header is empty %}
+
+			        	<img class="img-responsive img-thumbnail" src="{{ asset('admin/img/article_header_default.png') }}" title="" />
+
+			        {% else %}
+
+			        	<img class="img-responsive img-thumbnail" src="{{ article.header }}" title="" />
+
+			        {% endif %}
+
+					<p id="article-edit-introduction" class="article-content-edit" style="margin-top: 20px;" data-path="{{ path('mgn_admin_article_edit_introduction', {'article': article.id, 'action': 'edit'}) }}"><strong>
+
+						{% if article.introduction is empty %}
+
+				        	Rédigez une introduction <img class="loader" src="{{ asset('admin/img/ajax-loader.gif') }}" title="" />
+
+				        {% else %}
+
+				        	{{ article.introduction }} <img class="loader" src="{{ asset('admin/img/ajax-loader.gif') }}" title="" />
+
+				        {% endif %}
+
+			        </strong></p>
+
+				</div>
+
+			</section>
+
+	        <div class="row">
+
+	            <div class="col-lg-12">
+
+	                <div id="contents-load" data-path="{{path('mgn_admin_article_contents_sortable')}}">
+	                	
+	                	{% for content in article.contents %}
+
+	                		{% if content.paragraph != null %}
+
+								{% include "MgnContentBundle:Contents:paragraph.html.twig" %}
+
+							{% elseif content.title != null %}
+
+								{% include "MgnArticleBundle:Contents:title.html.twig" %}
+
+							{% elseif content.subtitle != null %}
+
+								{% include "MgnArticleBundle:Contents:subtitle.html.twig" %}
+
+							{% elseif content.picture != null %}
+
+								{% include "MgnArticleBundle:Contents:picture.html.twig" %}
+
+							{% endif %}
+
+	                	{% endfor %}
+
+	                </div>
+
+	            </div>
+
+	        </div>
+
+	        <div class="row">
+
+	            <div class="col-lg-12">
+
+	                <div class="contents-add panel panel-default text-center" style="height: 90px;">
+
+	                    <div class="panel-body">
+
+	                        <div class="contents-add-out"><i class="fa fa-plus fa-2x text-info" style="margin-top: 15px;"></i></div>
+
+	                        <div class="contents-add-over">
+
+	                            <button type="button" class="btn btn-primary">
+	                                <span class="fa fa-text-height fa-2x"></span> Titre
+	                            </button>
+
+	                            <button type="button" class="btn btn-primary">
+	                                <span class="fa fa-text-height fa-2x"></span> Sous-titre
+	                            </button>
+
+	                            <a type="button" class="btn btn-primary contents-add-link" href="{{ url('mgn_content', {'container': 'article', 'id': article.id, 'content': 'new', 'type': 'paragraph'})}}">
+	                                <span class="fa fa-pencil fa-2x"></span> Paragraphe
+	                            </a>
+
+	                            <button type="button" class="btn btn-primary">
+	                                <span class="fa fa-picture-o fa-2x"></span> Image
+	                            </button>
+
+	                            <button type="button" class="btn btn-primary">
+	                                <span class="fa fa-film fa-2x"></span> Vidéo
+	                            </button>
+
+	                            <button type="button" class="btn btn-primary">
+	                                <span class="fa fa-quote-right fa-2x"></span> Citation
+	                            </button>
+
+	                            <button type="button" class="btn btn-primary">
+	                                <span class="fa fa-list-ul fa-2x"></span> Liste
+	                            </button>
+
+	                        </div>
+
+	                    </div>
+
+	                </div>
+
+	            </div>
+
+	        </div>
+
+	        <div class="row">
+
+	            <div class="col-lg-12">
+
+	                <div class="pull-right">
+
+		                <button type="button" class="btn btn-primary">
+		                    Sauvegarder
+		                </button>
+
+		                <button type="button" class="btn btn-success">
+		                    Publier
+		                </button>
+
+	                </div>
+
+	            </div>
+
+	        </div>
+
+		</div>
+
+	</div>
+
+{% endblock %}

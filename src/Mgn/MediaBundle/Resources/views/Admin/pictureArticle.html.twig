@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="UTF-8" />
+    
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+   	<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+
+    <title>{% block title %}{{ Config('siteTitre') }}{% endblock %}</title>
+
+    <!-- Core CSS - Include with every page -->
+    <link href="{{ asset('css/mutagene.css') }}" rel="stylesheet" media="screen">
+
+    <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}" >
+    <link rel="stylesheet" href="{{ asset('css/foundation-icons.css') }}" >
+
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+
+</head>
+
+<body>
+
+<div class="container">
+
+	<div class="row">
+	
+		<div class="col-lg-12">
+
+			<div class="page-header">
+
+				<h1><i class="fi-pencil"></i> Ajouter une image</h1>
+
+			</div>
+
+		</div>
+
+		{% for message in app.session.flashbag.get('success') %}
+		<div class="col-lg-12">
+	        <div class="alert alert-success">
+	        	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+	            {{ message }}
+	        </div>
+        </div>
+        {% endfor %}
+	
+		<div class="col-lg-12">
+
+			<h4>Lien vers l'image</h4>
+
+			<div class="panel panel-default">
+				<div class="panel-body">
+					{{ url }}
+				</div>
+			</div>
+
+        </div>
+	
+		<div class="col-lg-12">
+
+			<img src="{{ url }}" title="" style="max-width: 100%;"/>
+
+        </div>
+
+	</div>
+
+    <!-- Core Scripts - Include with every page -->
+    <script src="{{ asset('js/jquery-2.0.3.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/mgncode.js') }}"></script>
+    <script src="{{ asset('js/jquery.metisMenu.js') }}"></script>
+
+</div>
+</body>

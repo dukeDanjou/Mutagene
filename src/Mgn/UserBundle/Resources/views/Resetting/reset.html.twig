@@ -1,0 +1,79 @@
+{% extends "MgnUserBundle::layout.html.twig" %}
+
+{% block arianne %}
+    {{ parent() }}
+    </li>
+    <li class="active">
+        {{ 'user.ariane.resetting'|trans }}
+    </li>
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+
+    <div class="col-lg-12">
+
+        <div class="page-header">
+            <h1>{{ 'user.reset.title'|trans }}</h1>
+        </div>
+
+        <p>{{ 'user.reset.message'|trans }}</p>
+
+        {% if form_errors(form) or form_errors(form.password.first) %}
+
+        <div class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {{ form_errors(form) }}
+            {{ form_errors(form.password.first) }}
+        </div>
+
+        {% endif %}
+
+        <form action="{{ path('mgn_user_resetting_confirmation', {'token': token, 'email': email}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+
+            <div class="form-group{% if form_errors(form.password.first) %} has-error{% endif %}">
+
+                <label for="mgn_userbundle_resettype_password_first" class="col-lg-2 control-label">{{ 'registration.register.form.password'|trans }}</label>
+
+                <div class="col-lg-8">
+
+                    {{ form_widget(form.password.first, { 'attr' : { 'class' : 'form-control' } }) }}
+
+                    <p class="help-block"><strong>{{ 'registration.register.form.rules'|trans }}:</strong> {{ 'registration.register.form.rules.password'|trans }}</p>
+
+                </div>
+
+            </div>
+
+            <div class="form-group{% if form_errors(form.password.first) %} has-error{% endif %}">
+
+                <label for="mgn_userbundle_resettype_password_second" class="col-lg-2 control-label">{{ 'registration.register.form.password_confirmation'|trans }}</label>
+
+                <div class="col-lg-8">
+
+                    {{ form_widget(form.password.second, { 'attr' : { 'class' : 'form-control' } }) }}
+
+                </div>
+
+            </div>
+
+            {{ form_rest(form) }}
+
+            <div class="form-group">
+
+                <div class="col-lg-offset-2 col-lg-10">
+
+                    <button type="submit" class="btn btn-primary">{{ 'user.button.reset'|trans }}</button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

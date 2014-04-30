@@ -1,0 +1,148 @@
+{% extends "MgnUserBundle::layout.html.twig" %}
+
+{% block title %}{{ user.username }} - {{ parent() }}{% endblock %}
+
+{% block arianne %}
+
+    {{ parent() }}
+	<li class="active">{{ user.username }}</li>
+
+{% endblock %}
+
+{% block pagetitle %}
+
+    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") and app.user.usernameCanonical == user.usernameCanonical %}
+
+    	Mon compte
+
+    {% else %}
+
+    	{{ user.username }}
+
+    {% endif %}
+    
+{% endblock %}
+
+{% block body %}
+
+	<div class="row">
+
+		{% if is_granted("IS_AUTHENTICATED_REMEMBERED") and app.user.usernameCanonical == user.usernameCanonical %}
+
+			<div class="col-lg-12">
+
+				<ul class="nav nav-tabs">
+
+					<li class="active"><a href="{{ path('mgn_user_profile', {'username': user.usernameCanonical}) }}">Profil</a></li>
+					<li><a href="{{ path("mgn_user_edit_profile", {'username': user.usernameCanonical}) }}">Modifier</a></li>
+					<li><a href="{{ path("mgn_user_edit_parameters", {'username': user.usernameCanonical}) }}">Paramètres</a></li>
+
+				</ul>
+
+			</div>
+
+		{% endif %}
+
+		<div class="col-lg-12" style="margin-top: 30px;">
+
+			<div class="panel panel-default">
+
+				<div class="panel-heading">
+
+					<h3 class="panel-title">Informations général</h3>
+
+				</div>
+
+				<div class="panel-body">
+
+					<dl class="dl-horizontal">
+
+						<dt>Date d'inscription</dt>
+						<dd>{{ user.registered|datetime|capitalize }}</dd>
+
+						<dt>Dernière connexion</dt>
+						<dd>{{ user.lastlogin|datetime|capitalize }}</dd>
+						
+					</dl>
+
+					<dl class="dl-horizontal">
+						
+						{% if user.firstName != null %}
+							<dt>Prénom</dt>
+							<dd>{{ user.firstName }}</dd>
+						{% endif %}
+						
+						{% if user.lastName != null %}
+							<dt>Nom</dt>
+							<dd>{{ user.lastName }}</dd>
+						{% endif %}
+						
+						{% if user.birthday != null %}
+							<dt>Date de naissance</dt>
+							<dd>{{ user.birthday|date('d/m/Y') }}</dd>
+						{% endif %}
+
+					</dl>
+
+				</div>
+
+			</div>
+
+			<div class="panel panel-default">
+
+				<div class="panel-heading">
+
+					<h3 class="panel-title">Forum</h3>
+
+				</div>
+
+				<div class="panel-body">
+
+					<dl class="dl-horizontal">
+				
+						{% if user.signature != null %}
+							<dt>Signature</dt>
+							<dd class="well">{% set url = app.request.schemeAndHttpHost %}{{ user.signature|nl2br|mcode('parser', 'comments', url)|raw }}</dd>
+						{% endif %}
+
+					</dl>
+
+				</div>
+
+			</div>
+
+			<div class="panel panel-default">
+
+				<div class="panel-heading">
+
+					<h3 class="panel-title">Statistiques</h3>
+
+				</div>
+
+				<div class="panel-body">
+
+					<dl class="dl-horizontal">
+
+						<dt>Messages</dt>
+						<dd>{{ user.countPost }}</dd>
+
+						<dt>Sujets</dt>
+						<dd>{{ user.countTopic }}</dd>
+
+						<dt>News</dt>
+						<dd>{{ user.countArticle }}</dd>
+
+						<dt>Commentaires</dt>
+						<dd>{{ user.countMessage }}</dd>
+
+					</dl>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+{% endblock %}

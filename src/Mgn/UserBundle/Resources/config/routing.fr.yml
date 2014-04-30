@@ -1,0 +1,77 @@
+user.connexion:
+    path:   /membres/connexion
+    defaults:  { _controller: MgnUserBundle:Security:login }
+
+login_check:
+    path:   /login_check
+
+logout:
+    path:   /logout
+
+user.register:
+    path:   /membres/inscription
+    defaults:  { _controller: MgnUserBundle:Registration:register }
+
+user.register.confirmation:
+    path:   /membres/inscription/confirmation/{token}
+    defaults:  { _controller: MgnUserBundle:Registration:confirmation }
+
+user.resetting:
+    path:   /membres/recuperation/demande/
+    defaults:  { _controller: MgnUserBundle:Resetting:request }
+
+mgn_user_list:
+    pattern:  /membres/liste
+    defaults: { _controller: MgnUserBundle:User:liste }
+
+mgn_user_profile:
+    pattern:  /profil/{username}
+    defaults: { _controller: MgnUserBundle:User:profil, username: '' }
+
+mgn_user_edit_profile:
+    path:   /profil/{username}/modifier
+    defaults:  { _controller: MgnUserBundle:User:editProfile }
+
+mgn_user_edit_parameters:
+    path:   /profil/{username}/parametres
+    defaults:  { _controller: MgnUserBundle:User:editParameters }
+
+mgn_user_resetting_send_email:
+    path:   /membres/recuperation/envoi-email/
+    defaults:  { _controller: MgnUserBundle:Resetting:sendEmail }
+
+mgn_user_resetting_confirmation:
+    path:   /membres/recuperation/reset/{email}/{token}
+    defaults:  { _controller: MgnUserBundle:Resetting:reset }
+
+mgn_user_admin_list_user:
+    path:   /admin/membres/liste
+    defaults:  { _controller: MgnUserBundle:Admin:listUsers }
+
+mgn_user_admin_profile_user:
+    path:   /admin/membres/profil/{id}
+    defaults:  { _controller: MgnUserBundle:Admin:profileUser }
+
+mgn_user_admin_list_group:
+    path:   /admin/groupes/liste
+    defaults:  { _controller: MgnUserBundle:Admin:listGroups }
+
+mgn_user_admin_profile_group:
+    path:   /admin/groupes/profil/{id}
+    defaults:  { _controller: MgnUserBundle:Admin:profileGroup }
+
+mgn_user_admin_group_administer:
+    path:   /admin/groupes/administrer/{id}
+    defaults:  { _controller: MgnUserBundle:Admin:administerGroup }
+
+mgn_user_admin_group_users:
+    path:   /admin/groupes/membres/{id}
+    defaults:  { _controller: MgnUserBundle:Admin:usersToGroup }
+
+mgn_user_admin_group_delete:
+    path:   /admin/groupes/supprimer/{id}
+    defaults:  { _controller: MgnUserBundle:Admin:deleteGroup }
+
+mgn_user_admin_user_delete_to_group:
+    path:   /admin/groupes/{groupid}/supprimer-membre/{userid}
+    defaults:  { _controller: MgnUserBundle:Admin:deleteUserToGroup }

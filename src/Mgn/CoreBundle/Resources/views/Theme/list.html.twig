@@ -1,0 +1,144 @@
+{% extends "MgnCoreBundle::admin.html.twig" %}
+
+{% block title %}
+    {{ 'core.themes_list.title'|trans }} - {{ parent() }}
+{% endblock %}
+
+{% block sidebar_appearance %}active{% endblock %}
+{% block sidebar_appearance_themes %}select{% endblock %}
+
+{% block arianne %}
+    {{ parent() }}
+        </li>
+        <li>
+            {{ 'core.ariane.themes_list'|trans }}
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+
+    <div class="col-lg-12">
+
+        <div class="page-header">
+            <h1><i class="fi-monitor"></i> {{ 'core.themes_list.title'|trans }} <small><span class="label label-default">{% for theme in themes %}{{ loop.length }}{% endfor %}</span></small></h1>
+        </div>
+
+        <div class="alert alert-info">{{ 'core.themes_list.message'|trans }}</div>
+
+        <div class="row">
+
+            {% for theme in themes %}
+
+                {% if theme.slug == Config('theme') %}{% set actif = true %}{% else %}{% set actif = false %}{% endif %}
+
+                <div class="col-lg-4">
+
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <img src="{{ asset('themes/'~theme.slug~'/preview.png') }}" alt="..." class="pull-left" style="margin-right:10px; max-width: 100%;">
+                        </div>
+                            
+                        <div class="panel-footer">
+                            <span class="lead text-primary">{% if actif == true %}<strong>Activé : </strong>{% endif %}{{ theme.themeTitle }}</span>
+                            <span class="pull-right">
+                                <button class="btn btn-primary" data-toggle="modal" data-target="#modal{{ theme.id }}">Détails</button>
+                                {% if actif == false %}<a href="#" class="btn btn-default" role="button">Définir par défaut</a>{% endif %}
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="modal{{ theme.id }}" tabindex="-1" role="dialog" aria-labelledby="modal{{ theme.id }}" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+
+                            <div class="modal-header" style="height: 45px;">
+
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+                            </div>
+
+                            <div class="modal-body">
+
+                                <div class="row">
+
+                                    <div class="col-lg-6">
+
+                                        <img src="{{ asset('themes/'~theme.slug~'/preview.png') }}" alt="..." class="pull-left img-thumbnail" style="margin-right:10px; max-width: 100%;">
+
+                                    </div>
+
+                                    <div class="col-lg-6">
+
+                                        <div class="row">
+
+                                            <div class="col-lg-12" style="height: 30px;">
+
+                                                {% if actif == true %}<p><span class="label label-primary">Thème actuel</span></p>{% endif %}
+
+                                            </div>
+
+                                            <div class="col-lg-12">
+
+                                                <h1 class="modal-title" id="myModalLabel">{{ theme.themeTitle }} <small><small>Version : {{ theme.version }}</small></small></h1>
+
+                                            </div>
+
+                                            <div class="col-lg-12" style="margin-top: 10px;">
+
+                                                <p>Par <a href="{{ theme.url }}" target="_blank">{{ theme.author }}</a></p>
+
+                                            </div>
+
+                                            <div class="col-lg-12" style="margin-top: 40px;">
+
+                                                <p>
+                                                    {{ theme.description }}
+                                                </p>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="modal-footer">
+
+                                <div class="row">
+
+                                    <div class="col-lg-12">
+
+                                        <p class="text-center">
+
+                                            <a type="button" class="btn btn-primary" href="{{ path('mgn_core_admin_editor_layout', {theme: theme.id }) }}">Editeur</a>
+
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

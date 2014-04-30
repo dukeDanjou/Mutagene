@@ -1,0 +1,104 @@
+<?php
+namespace Mgn\ForumBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+use Gedmo\Mapping\Annotation as Gedmo;
+
+use Mgn\ForumBundle\Entity\Forum;
+use Mgn\MessageBundle\Entity\Message;
+
+/**
+ * Mgn\ForumBundle\Entity\Topic
+ *
+ * @ORM\Table(name="mgn_forum_topic")
+ * @ORM\Entity(repositoryClass="Mgn\ForumBundle\Entity\TopicRepository")
+ */
+class Topic
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var integer $forum
+     *
+     * @ORM\ManyToOne(targetEntity="Mgn\ForumBundle\Entity\Forum", inversedBy="topics")
+     */
+    private $forum;
+
+    /**
+     * @var string $title
+     *
+     * @ORM\Column(name="title", type="string", length=255)
+     */
+    private $title;
+
+    /**
+    * @Gedmo\Slug(fields={"title"})
+    * @ORM\Column(length=128, unique=true)
+    */
+    private $slug;
+
+    /**
+     * @var bigint $countViews
+     *
+     * @ORM\Column(name="countViews", type="bigint")
+     */
+    private $countViews;
+
+    /**
+     * @var bigint $countPosts
+     *
+     * @ORM\Column(name="countPosts", type="bigint")
+     */
+    private $countPosts;
+
+    /**
+     * @var string $typeTopic
+     *
+     * @ORM\Column(name="typeTopic", type="string", length=255)
+     */
+    private $typeTopic;
+
+    /**
+     * @var boolean $topicLock
+     *
+     * @ORM\Column(name="topicLock", type="boolean")
+     */
+    private $topicLock;
+
+    /**
+     * @var integer $firstMessage
+     *
+     * @ORM\OneToOne(targetEntity="Mgn\MessageBundle\Entity\Message")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $firstMessage;
+
+    /**
+     * @var integer $lastMessage
+     *
+     * @ORM\OneToOne(targetEntity="Mgn\MessageBundle\Entity\Message", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $lastMessage;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Mgn\MessageBundle\Entity\Message", mappedBy="topic")
+     */
+    private $messages;
+	
+	public function __construct()
+    {
+    	$this->countViews = '0';
+		$this->countPosts = '1';
+		$this->typeTopic = 'normal';
+		$this->topicLock = false;
+    }
+}

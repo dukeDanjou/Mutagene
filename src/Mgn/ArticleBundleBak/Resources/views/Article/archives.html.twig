@@ -1,0 +1,98 @@
+{% extends "MgnArticleBundle::layout.html.twig" %}
+
+{% if articles != null %}
+
+    {% if filtre == 'all' %}
+
+        {% set title = 'Tous les articles' %}
+
+    {% else %}
+
+        {% set title = 'Articles dans '~articles[0].category.name %}
+
+    {% endif %}
+    
+{% else %}
+
+    {% set title = 'Archives' %}
+
+{% endif %}
+
+{% block title %}{{title}} - {{ parent() }}{% endblock %}
+
+{% block arianne %}
+
+    {{ parent() }}
+    {% if filtre == 'all' %}
+
+        <li class="active">Archives</li>
+
+    {% else %}
+
+        <li class="active">Archives de {{ articles[0].category.name }}</li>
+
+    {% endif %}
+
+{% endblock %}
+
+{% block pagetitle %}
+
+    {{title}}
+    
+{% endblock %}
+
+{% block body %}
+
+    {% if articles is empty %}
+
+        <div class="alert alert-infos">
+            Aucun article n'a été trouvé.
+        </div>
+
+    {% else %}
+
+        <div class="row">
+
+            {% set nbArticle = 0 %}
+
+            {% for article in articles %}
+
+                {% set nbArticle = nbArticle + 1 %}
+                
+                <div class="col-lg-6">
+
+                    <div class="panel panel-default">
+
+                        <div class="panel-body">
+
+                            <h4><a href="{{ path('mgn_article_read', {'date': article.date|date('d-m-Y'), 'id': article.id, 'slug': article.slug, 'category': article.category.slug}) }}">{{ article.title }}</a></h4>
+
+                        </div>
+                    
+                        <div class="panel-footer">
+
+                            Par <a href="{{ path('mgn_user_profile', {'username': article.author.usernameCanonical}) }}">{{ article.author.username }}</a> | {{ article.date|datetime|capitalize }} | <i class="fa fa-comments"></i> {{ article.countComments }}
+                            
+                        </div>
+
+                    </div>
+
+                </div>
+
+        {% if nbArticle == 2 %}
+            
+        </div> 
+
+        <div class="row">
+
+        {% set nbArticle = 0 %}
+
+        {% endif %}
+
+            {% endfor %}  
+
+        </div>
+        
+        {% endif %}
+
+{% endblock %}

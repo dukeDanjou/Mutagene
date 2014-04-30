@@ -1,0 +1,200 @@
+{% extends "MgnArticleBundle::layout.html.twig" %}
+
+{% block title %}{{ article.title }} - {{ article.date|datetime|capitalize }} - {{ parent() }}{% endblock %}
+
+{% block arianne %}
+
+    {{ parent() }}
+    <li><a href="{{ path('mgn_article_archives', {'filtre': article.category.slug}) }}">{{ article.category.name }}</a></li>
+    <li class="active">{{ article.title }}</li>
+
+{% endblock %}
+
+{% block pagetitle %}
+
+    {{ article.title }}
+    
+{% endblock %}
+
+{% block body %}
+
+    {% if Theme('articleBundleArticleRead') != null %}
+
+        {% include template_from_string(Theme('articleBundleArticleRead')|raw) %}
+
+    {% else %}
+
+    <article class="row">
+
+        <div class="col-lg-12">
+
+            <p class="article-read-infos">
+                <i class="fa fa-calendar"></i> {{ article.date|datetime|capitalize }} 
+                <i class="fa fa-folder-open"></i> <a href="{{ path('mgn_article_archives', {'filtre': article.category.slug}) }}">{{ article.category.name }}</a> 
+                <i class="fa fa-comments"></i> <a  href="{{ path('mgn_article_read', {'date': article.date|date('d-m-Y'), 'id': article.id, 'slug': article.slug, 'category': article.category.slug}) }}#comments">{{ article.countComments }} {% if article.countComments <= 1 %}Commentaire{% else %}Commentaires{% endif %}</a>
+            </p>
+
+            <span>
+
+                <img class="thumbnail" style="max-width: 100%;" src="{{ article.header }}" title="" />
+
+            </span>
+
+        </div>
+
+        <div class="col-lg-12 text-justify">
+
+            <p>
+
+            {% set url = app.request.schemeAndHttpHost %}
+
+            {{ article.contents|nl2br|mcode('parser', 'article', url)|raw }}
+
+            </p>
+
+        </div>
+
+        <footer class="col-lg-12">
+
+            <h3><i class="fi-torso"></i> Auteur</h3>
+
+            <div class="media">
+
+                <span class="pull-left thumbnail">
+
+                    {{ article.author.avatar|avatar(article.author.avatarPath, article.author.email, '100', 'media-object')|raw }}
+
+                </span>
+
+                <div class="media-body">
+
+                    <h4 class="media-heading"><a href="{{ path('mgn_user_profile', {'username': article.author.usernameCanonical}) }}"><strong style="font-size: 20px;">{{ article.author.username }}</strong></a></h4>
+                    
+                    <p>...</p>
+
+                </div>
+            </div>
+
+        </footer>
+
+    </article>
+    
+    <section class="row" id="comments">
+
+        <div class="col-lg-12">
+
+            <h3><i class="fa fa-comments"></i> Les commentaires ({{ article.countComments }})</h3>
+
+            {% if messages is empty %}
+
+                {% if (article.comments == 1) %}
+
+                    <div class="alert alert-info">
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}Soyez{% else %}Connectez-vous et soyez{% endif %} le premier à rédiger un commentaire sur cet article !
+                    </div>
+
+                {% endif %}
+
+            {% else %}
+
+                {% for message in messages %}
+
+                    <div class="media" id="{{ message.id }}">
+
+                        <a class="pull-left img-thumbnail" href="{{ path('mgn_user_profile', {'username': message.author.usernameCanonical}) }}">
+
+                            {{ message.author.avatar|avatar(message.author.avatarPath, message.author.email, '50', 'media-object')|raw }}
+
+                        </a>
+
+                        <div class="media-body">
+
+                            <h4 class="media-heading">
+
+                                <a href="{{ path('mgn_user_profile', {'username': message.author.usernameCanonical}) }}">{{ message.author.username }}</a>
+
+                                <span class="pull-right">
+
+                                        <small>#{{ loop.index }}</small>
+
+                                </span>
+
+                            </h4>
+
+                            {% if message.messageLock == 1 %}
+                                <p class="text-error">Ce commentaire a été modéré.</p>
+                            {% else %}
+                                {% set url = app.request.schemeAndHttpHost %}
+
+                                <p>{{ message.contents|nl2br|mcode('parser', 'comments', url)|raw }}</p>
+                            {% endif %}
+
+                            <span class="date pull-right text-muted">{{ message.date|datetime|capitalize }}</span>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+            {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                
+                {% if (article.comments == 1) and (is_granted("IS_AUTHENTICATED_REMEMBERED")) %}
+                    <h3>Ajouter un commentaire</h3>
+                    
+                    <form action="{{ path('mgn_article_add_comment', {'id': article.id}) }}" method="post" {{ form_enctype(form) }} >
+
+                        <div class="controls">
+                            <div id="viewDiv"></div>
+                        </div>
+
+                        <fieldset>
+                            {% if form_errors(form) %}
+                                <div class="alert alert-block alert-danger fade in">
+                                    <a class="close" data-dismiss="alert" href="#">&times;</a>
+                                    {{ form_errors(form) }}
+                                </div>
+                            {% endif %}
+                        </fieldset>
+                        
+                        <div class="form-group">
+                            <div>
+
+                                <span class="pull-right"><small>bbcode activé</small></span>
+
+                                {#{% set url = app.request.schemeAndHttpHost %}
+
+                                {{ "mgn_messagebundle_messagetype_contents"|mcode('menu', 'article', url)|raw }}#}
+                                
+                                {{ form_widget(form.contents, { 'attr' : { 'class' : 'form-control', 'rows' : '10' } }) }}
+                            </div>
+                        </div>
+                        
+                        {{ form_widget(form) }}
+                        
+                        <div class="form-actions">
+                            <button class="btn btn-primary" type="submit" id="_submit" name="_submit">Envoyer</button>
+                            {#<button class="btn btn-primary" type="button" onclick="view('mgn_messagebundle_messagetype_contents', 'article', 'viewDiv', '{{ app.request.schemeAndHttpHost }}{{ app.request.getBaseURL() }}');">Visualiser</button>#}
+                        </div>
+                        
+                    </form>
+
+                {% elseif (article.comments == 0) %}
+
+                    <div class="alert alert-info">
+                        Les commentaires de cette news sont désactivé.
+                    </div>
+
+                {% endif %}
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+    {% endif %}
+
+{% endblock %}

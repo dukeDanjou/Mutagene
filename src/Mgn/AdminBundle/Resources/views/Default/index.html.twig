@@ -1,0 +1,36 @@
+{% extends "MgnAdminBundle::layout.html.twig" %}
+
+{% block arianne %}
+    {{ parent() }}
+    </li>
+    <li class="active">
+        {{ 'admin.ariane.dashboard'|trans }}
+    </li>
+{% endblock %}
+
+{% block sidebar_dashboard %}active{% endblock %}
+
+{% block body %}
+
+	<div class="row state-overview">
+		<div class="col-lg-3 col-sm-6">
+			<section class="panel">
+				<div class="symbol terques">
+					<i class="fa fa-pencil"></i>
+				</div>
+				<div class="value">
+					<h1 class="countArticle">
+					0
+					</h1>
+					<p>Articles</p>
+				</div>
+			</section>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block jquery %}
+{{ parent() }}
+countUp({{ Config('totalArticles') }});
+{% endblock %}
