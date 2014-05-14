@@ -653,7 +653,7 @@
             e.preventDefault();
         });
 
-        $(document).on('click', '.buttoncontentsdelete', function(e) {
+        $(document).on('click', '.content-delete', function(e) {
             var idform = $(this).parents('section').attr('id');
             var actiondelete = $(this).attr('href');
             $( "#"+$(this).parents('form:first').attr('id')+" .loader" ).show();
@@ -665,7 +665,6 @@
                 success: function(data){
                     $( "#"+idform ).remove();
                     $( ".loader" ).hide();
-                    $( ".").focus();
                 },
                 error: function(data) {
                    alert(data);
@@ -716,8 +715,6 @@
                 placeholder: 'highlight', // classe à ajouter à l'élément fantome
                 update: function(event, ui) {   
                     var order = $("#contents-load").sortable('toArray').toString();
-                    //var order = $('#contents-load').sortable('serialize');
-                    //var path = "{{ path('mgn_admin_article_contents_sortable')}}";
                     var path = $("#contents-load").attr("data-path");
 
                     //alert(order);

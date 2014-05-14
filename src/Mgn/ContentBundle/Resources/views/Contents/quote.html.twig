@@ -1,0 +1,37 @@
+<section id="{{ content.id }}" class="sortable panel">
+
+	<div class="panel-body">
+
+		<blockquote>
+
+			<p class="text-justify">{{ content.quote|nl2br }}</p>
+
+			{% if content.quoteName != null or content.quoteLink != null %}
+
+				<footer>
+
+					{% if content.quoteLink != null and content.quoteName != null %}
+
+						<cite title="Source Title"><a href="{{ content.quoteLink }}" target="_blank">{{ content.quoteName }}</a></cite>
+
+					{% elseif content.quoteLink != null %}
+
+						<cite title="Source Title"><a href="{{ content.quoteLink }}" target="_blank">{{ content.quoteLink }}</a></cite>
+
+					{% else %}
+
+						<cite title="Source Title">{{ content.quoteName }}</cite>
+
+					{% endif %}
+
+				</footer>
+
+			{% endif %}
+
+		</blockquote>
+
+		<p><a href="{{ path('mgn_content', {'container': 'article', 'id': article.id, 'content': content.id, 'type': 'quote', 'action': 'edit'})}}" class="pull-right text-info content-edit"><small>Editer</small></a></p>
+
+	</div>
+
+</section>

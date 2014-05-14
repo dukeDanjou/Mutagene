@@ -36,6 +36,13 @@ class Content
     private $article;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="type", type="string", length=255)
+     */
+    private $type;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="datetime")
@@ -120,6 +127,8 @@ class Content
 
     public function __construct()
     {
+        $datetime = new \Datetime();
+        $this->date = $datetime;
         $this->position = -1;
     }
 
@@ -407,5 +416,28 @@ class Content
     public function getArticle()
     {
         return $this->article;
+    }
+
+    /**
+     * Set date
+     *
+     * @param \DateTime $date
+     * @return Content
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+    
+        return $this;
+    }
+
+    /**
+     * Get date
+     *
+     * @return \DateTime 
+     */
+    public function getDate()
+    {
+        return $this->date;
     }
 }

@@ -20,6 +20,12 @@ services:
         tags:
             - { name: twig.extension }
 
+    mgn.mcode.video:
+        class: Mgn\CoreBundle\Twig\Extension\MCodeVideoExtension
+        arguments: [@mgn.config]
+        tags:
+            - { name: twig.extension }
+
     mgn.pagination:
         class: Mgn\CoreBundle\Twig\Extension\PaginationExtension
         arguments: [@mgn.config]

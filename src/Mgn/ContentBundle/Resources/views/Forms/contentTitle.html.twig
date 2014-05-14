@@ -1,0 +1,33 @@
+<section id="{{ content.id }}" class="sortable panel">
+
+	<div class="panel-body">
+
+		<form id="formContents_{{ content.id }}" action="{{ path('mgn_content', {'container': 'article', 'id': article.id, 'content': content.id, 'type': 'title', 'action': 'save'})}}" method="post" {{ form_enctype(form_content) }} class="form-horizontal" role="form">
+
+		    <div class="form-group">
+
+			    <div class="col-lg-12">
+			        
+			        <label for="mgn_articlebundle_articletype_contenu">Titre <img class="loader" src="{{ asset('admin/img/ajax-loader.gif') }}" title="" /></label>
+
+			        {{ form_widget(form_content.title, { 'attr' : { 'class' : 'form-control formcontent' } }) }}
+
+			    </div>
+
+		    </div>
+		        
+		    {{ form_rest(form_content) }}
+
+			<div class="pull-right">
+
+				<button type="button" class="btn btn-primary btn-xs content-save">Enregistrer</button>
+
+				<button type="button" class="btn btn-danger btn-xs content-delete" href="{{ path('mgn_content_delete', {'content': content.id})}}">Supprimer</button>
+
+			</div>
+
+		</form>
+
+	</div>
+
+</section>

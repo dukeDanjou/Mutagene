@@ -44,7 +44,7 @@
 
 			        {% endif %}
 
-					<p id="article-edit-introduction" class="article-content-edit" style="margin-top: 20px;" data-path="{{ path('mgn_admin_article_edit_introduction', {'article': article.id, 'action': 'edit'}) }}"><strong>
+					<p id="article-edit-introduction" class="article-content-edit text-justify" style="margin-top: 20px;" data-path="{{ path('mgn_admin_article_edit_introduction', {'article': article.id, 'action': 'edit'}) }}"><strong>
 
 						{% if article.introduction is empty %}
 
@@ -66,25 +66,33 @@
 
 	            <div class="col-lg-12">
 
-	                <div id="contents-load" data-path="{{path('mgn_admin_article_contents_sortable')}}">
+	                <div id="contents-load" data-path="{{path('mgn_content_sortable')}}">
 	                	
 	                	{% for content in article.contents %}
 
-	                		{% if content.paragraph != null %}
+	                		{% if content.type == 'paragraph' %}
 
 								{% include "MgnContentBundle:Contents:paragraph.html.twig" %}
 
-							{% elseif content.title != null %}
+							{% elseif content.type == 'title' %}
 
-								{% include "MgnArticleBundle:Contents:title.html.twig" %}
+								{% include "MgnContentBundle:Contents:title.html.twig" %}
 
-							{% elseif content.subtitle != null %}
+							{% elseif content.type == 'subtitle' %}
 
-								{% include "MgnArticleBundle:Contents:subtitle.html.twig" %}
+								{% include "MgnContentBundle:Contents:subtitle.html.twig" %}
 
-							{% elseif content.picture != null %}
+							{% elseif content.type == 'picture' %}
 
-								{% include "MgnArticleBundle:Contents:picture.html.twig" %}
+								{% include "MgnContentBundle:Contents:picture.html.twig" %}
+
+							{% elseif content.type == 'video' %}
+
+								{% include "MgnContentBundle:Contents:video.html.twig" %}
+
+							{% elseif content.type == 'quote' %}
+
+								{% include "MgnContentBundle:Contents:quote.html.twig" %}
 
 							{% endif %}
 
@@ -108,33 +116,33 @@
 
 	                        <div class="contents-add-over">
 
-	                            <button type="button" class="btn btn-primary">
-	                                <span class="fa fa-text-height fa-2x"></span> Titre
-	                            </button>
-
-	                            <button type="button" class="btn btn-primary">
-	                                <span class="fa fa-text-height fa-2x"></span> Sous-titre
-	                            </button>
-
 	                            <a type="button" class="btn btn-primary contents-add-link" href="{{ url('mgn_content', {'container': 'article', 'id': article.id, 'content': 'new', 'type': 'paragraph'})}}">
 	                                <span class="fa fa-pencil fa-2x"></span> Paragraphe
 	                            </a>
 
-	                            <button type="button" class="btn btn-primary">
+	                            {#<a type="button" class="btn btn-primary contents-add-link" href="{{ url('mgn_content', {'container': 'article', 'id': article.id, 'content': 'new', 'type': 'title'})}}">
+	                                <span class="fa fa-text-height fa-2x"></span> Titre
+	                            </a>#}
+
+	                            <a type="button" class="btn btn-primary contents-add-link" href="{{ url('mgn_content', {'container': 'article', 'id': article.id, 'content': 'new', 'type': 'subtitle'})}}">
+	                                <span class="fa fa-text-height fa-2x"></span> Sous-titre
+	                            </a>
+
+	                            <a type="button" class="btn btn-primary contents-add-link" href="{{ url('mgn_content', {'container': 'article', 'id': article.id, 'content': 'new', 'type': 'picture'})}}">
 	                                <span class="fa fa-picture-o fa-2x"></span> Image
-	                            </button>
+	                            </a>
 
-	                            <button type="button" class="btn btn-primary">
+	                            <a type="button" class="btn btn-primary contents-add-link" href="{{ url('mgn_content', {'container': 'article', 'id': article.id, 'content': 'new', 'type': 'video'})}}">
 	                                <span class="fa fa-film fa-2x"></span> Vidéo
-	                            </button>
+	                            </a>
 
-	                            <button type="button" class="btn btn-primary">
+	                            <a type="button" class="btn btn-primary contents-add-link" href="{{ url('mgn_content', {'container': 'article', 'id': article.id, 'content': 'new', 'type': 'quote'})}}">
 	                                <span class="fa fa-quote-right fa-2x"></span> Citation
-	                            </button>
+	                            </a>
 
-	                            <button type="button" class="btn btn-primary">
+	                            {#<button type="button" class="btn btn-primary">
 	                                <span class="fa fa-list-ul fa-2x"></span> Liste
-	                            </button>
+	                            </button>#}
 
 	                        </div>
 
@@ -152,13 +160,23 @@
 
 	                <div class="pull-right">
 
-		                <button type="button" class="btn btn-primary">
-		                    Sauvegarder
-		                </button>
+	                	{% if article.status == 'draft' %}
 
-		                <button type="button" class="btn btn-success">
+	                		<a type="button" class="btn btn-primary" href="{{ path('mgn_admin_article_list', {'status': 'draft'}) }}">
+			                    Sauvegarder
+			                </a>
+
+	                	{% else %}
+
+			                <a type="button" class="btn btn-primary" href="{{ path('mgn_admin_article_list', {'status': 'publish'}) }}">
+			                    Sauvegarder
+			                </a>
+
+		                {% endif %}
+
+		                <a type="button" class="btn btn-success" href="{{ path('mgn_admin_article_publish', {'id': article.id}) }}">
 		                    Publier
-		                </button>
+		                </a>
 
 	                </div>
 

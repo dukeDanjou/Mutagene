@@ -1,0 +1,213 @@
+{% extends "MgnArticleBundle::admin.html.twig" %}
+
+{% block title %}
+    Publication d'un article - {{ parent() }}
+{% endblock %}
+
+{% block sidebar_articles %}active{% endblock %}
+{% block sidebar_articles_writenext %}active{% endblock %}
+
+{% block body %}
+
+	<div class="row">
+
+		<div class="col-lg-12">
+
+			<section class="panel">
+
+				<header class="panel-heading">
+
+					<h4><i class="fi-pencil"></i> Publier l'article : {{ article.title }}</h4>
+
+				</header>
+
+			</section>
+
+			<section id="" class="panel">
+
+				<div class="panel-body">
+
+					<form method="post" {{ form_enctype(form) }} class="form-horizontal" role="form">
+
+					    <div class="">
+
+					        <div class="col-lg-12">
+					        
+					            {% if form_errors(form) %}
+					            <div class="alert alert-danger alert-dismissable">
+					                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+					                {{ form_errors(form) }}
+					            </div>
+					            {% endif %}
+
+					            <div class="form-group">
+
+					                <div class="row">
+
+					                    <div class="col-lg-6">
+
+					                        <label for="mgn_articlebundle_articletype_categorie">Catégorie</label>
+					                        
+					                        {{ form_widget(form.category, { 'attr' : { 'class' : 'form-control'} }) }}
+
+					                    </div>
+
+					                    <div class="col-lg-6">
+
+					                        <label for="mgn_articlebundle_articletype_author">Auteur</label>
+
+					                        {{ form_widget(form.author, { 'attr' : { 'class' : 'form-control'} }) }}
+
+					                    </div>
+
+					                </div>
+
+					            </div>
+
+					            <div class="form-group">
+
+					                <div class="row">
+
+					                    <div class="col-lg-12">
+
+					                        <label for="mgn_articlebundle_articletype_url">Url personnalisé</label>
+
+					                        <div class="input-group">
+
+					                        	{% set url = app.request.schemeAndHttpHost %}
+
+					                            <span class="input-group-addon">{{ url }}/article/{{ article.date|date('d') }}-{{ article.date|date('m') }}-{{ article.date|date('Y') }}/{{ article.id }}/</span>
+					                    
+					                            {{ form_widget(form.url, { 'attr' : { 'class' : 'form-control' } }) }}
+
+					                        </div>
+
+					                        <span class="help-block"><strong>Infos :</strong> Url sans espaces, ni accents. Exemple : une-url-de-test</span>
+
+					                    </div>
+
+					                </div>
+
+					            </div>
+
+					            <div class="form-group">
+
+					                <div class="row">
+
+					                    <div class="col-lg-6">
+
+					                        <label for="mgn_articlebundle_articletype_date">Date</label>
+
+					                        <div class="row">
+
+					                            <div class="col-lg-12">
+
+					                                <div class="row">
+
+					                                    <div class="col-lg-6">
+
+					                                        {{ form_widget(form.date.date, { 'attr' : { 'class' : 'form-control', 'placeholder' : '.col-lg-6', 'data-date-format' : 'dd/mm/yyyy' } }) }}
+
+					                                    </div>
+
+					                                    <div class="col-lg-6">
+					                                    
+					                                        {{ form_widget(form.date.time, { 'attr' : { 'class' : 'form-control', 'placeholder' : '.col-lg-6' } }) }}
+
+					                                    </div>
+
+					                                </div>
+
+					                            </div>
+
+					                            <div class="col-lg-12">
+
+					                                <span class="help-block"><strong>Infos :</strong> Permet de différer la publication d'un article.</span>
+
+					                            </div>
+
+					                        </div>
+
+					                    </div>
+
+					                    <div class="col-lg-6">
+
+					                        <div class="row">
+
+					                            <div class="col-lg-6">
+
+					                                <label for="">Options</label>
+
+					                                <div class="checkbox">
+
+					                                    <label>
+
+					                                        {{ form_widget(form.comments) }}
+
+					                                        Activer les commentaires
+
+					                                    </label>
+
+					                                </div>
+
+					                            </div>
+
+					                        </div>
+
+					                    </div>
+
+					                </div>
+
+					            </div>
+
+					        </div>
+
+					    </div>
+					            
+					    {{ form_widget(form) }}
+
+					    <div class="row">
+
+					        <div class="col-lg-12">
+
+					            <div id="viewDiv"></div>
+
+					        </div>
+
+					        <div class="col-lg-12">
+
+					            <div class="form-actions pull-right">
+
+					                <button class="btn btn-primary" type="submit" id="_submit" name="_submit">Publier</button>
+
+					                {% if article.status == 'draft' %}
+
+				                		<a type="button" class="btn btn-default" href="{{ path('mgn_admin_article_list', {'status': 'draft'}) }}">
+						                    Annuler
+						                </a>
+
+				                	{% else %}
+
+						                <a type="button" class="btn btn-default" href="{{ path('mgn_admin_article_list', {'status': 'publish'}) }}">
+						                    Annuler
+						                </a>
+
+					                {% endif %}
+
+					            </div>
+
+					        </div>
+
+					    </div>
+
+					</form>
+
+				</div>
+
+			</section>
+
+		</div>
+
+	</div>
+
+{% endblock %}

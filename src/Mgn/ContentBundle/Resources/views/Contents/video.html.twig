@@ -1,0 +1,11 @@
+<section id="{{ content.id }}" class="sortable panel">
+
+	<div class="panel-body">
+
+		<p style="text-align: center;">{{ content.video|mcodevideo|raw }}</p>
+
+		<p><a href="{{ path('mgn_content', {'container': 'article', 'id': article.id, 'content': content.id, 'type': 'video', 'action': 'edit'})}}" class="pull-right text-info content-edit"><small>Editer</small></a></p>
+
+	</div>
+
+</section>

@@ -1,0 +1,19 @@
+<section id="{{ content.id }}" class="sortable panel">
+
+	<div class="panel-body">
+
+		{% if content.picture is empty %}
+
+        	<img class="img-responsive img-thumbnail" src="{{ asset('admin/img/article_header_default.png') }}" title="" />
+
+        {% else %}
+
+        	<img class="img-responsive img-thumbnail" src="{{ content.picture }}" title="" />
+
+        {% endif %}
+
+		<p><a href="{{ path('mgn_content', {'container': 'article', 'id': article.id, 'content': content.id, 'type': 'picture', 'action': 'edit'})}}" class="pull-right text-info content-edit"><small>Editer</small></a></p>
+
+	</div>
+
+</section>

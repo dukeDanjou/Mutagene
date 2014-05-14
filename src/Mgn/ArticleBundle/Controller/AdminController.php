@@ -7,6 +7,7 @@ use Mgn\ArticleBundle\Entity\Category;
 use Mgn\ArticleBundle\Form\CategoryType;
 use Mgn\ArticleBundle\Entity\Article;
 use Mgn\ArticleBundle\Form\ArticleType;
+use Mgn\ArticleBundle\Form\ArticlePublishType;
 use Mgn\ArticleBundle\Form\ArticleEditType;
 use Mgn\CoreBundle\Entity\Config;
 use Mgn\MediaBundle\Entity\Picture;
@@ -458,143 +459,140 @@ class AdminController extends Controller
 	/**
    	* @Secure(roles="ROLE_ARTICLE_AUTHOR")
    	*/
-	public function contentsAction($article, $content, $type, $action)
+	public function deleteAction($id)
 	{
 		// On récupère les entitées dont on aura besoin
 		$article = $this->getDoctrine()
                       	 ->getManager()
-                      	 ->getRepository('MgnArticleBundle:Articlenext')
-                      	 ->find($article);
+                      	 ->getRepository('MgnArticleBundle:Article')
+                      	 ->find($id);
 
         $em = $this->container->get('doctrine')->getManager();
-
-        if ( $content == 'new' )
-        {
-        	$contents = new Contents;
-			$contents->setArticle($article);
-			$em->persist($contents);
-			$em->flush();
-        }
-        else
-        {
-        	$contents = $this->getDoctrine()
-                      	 ->getManager()
-                      	 ->getRepository('MgnArticleBundle:Contents')
-                      	 ->find($content);
-        }
-
-        // Création du FormType en fonction de $type
-        if ( $type == 'paragraph' ){ $form_contents = $this->createForm(new ContentsParagraphType, $contents); }
-
-		// On récupère le formulaire et on le traite
-		$request = $this->get('request');
-
-		// On vérifie qu'elle est de type « AJAX ».
-	    if($request->isXmlHttpRequest())
-	    {
-		    if( $content == 'new' )
-		    {
-				return $this->render('MgnArticleBundle:Forms:contentsParagraph.html.twig', array(
-		            'form_contents' => $form_contents->createView(),
-		            'contents' => $contents,
-		            'article' => $article,
-				));
-		    }
-		    elseif( $action == 'edit' )
-		    {
-				return $this->render('MgnArticleBundle:Forms:contentsParagraph.html.twig', array(
-		            'form_contents' => $form_contents->createView(),
-		            'contents' => $contents,
-		            'article' => $article,
-				));
-		    }
-		    else
-		    {
-		    	$form_contents->bind($request);
-
-		        if( $form_contents->isValid() )
-		        {
-		        	$em->persist($contents);
-					$em->flush();
-
-			        /*$return=array("responseCode"=>200, "id"=>$contents);
-					$return=json_encode($return);//jscon encode the array
-		   			return new Response($return,200,array('Content-Type'=>'application/json'));*/
-		   			return $this->render('MgnArticleBundle:Contents:paragraph.html.twig', array(
-		            'content' => $contents,
-		            'article' => $article,
-				));
-		        }
-		    }
-		}
-		
 	}
 
 	/**
    	* @Secure(roles="ROLE_ARTICLE_AUTHOR")
    	*/
-	public function contentsDeleteAction($content)
+	public function publishAction($id)
 	{
 		// On récupère les entitées dont on aura besoin
-        $contents = $this->getDoctrine()
+		$article = $this->getDoctrine()
                       	 ->getManager()
-                      	 ->getRepository('MgnArticleBundle:Contents')
-                      	 ->find($content);
+                      	 ->getRepository('MgnArticleBundle:Article')
+                      	 ->find($id);
 
-        $request = $this->get('request');
+		$config = $this->getDoctrine()
+                         ->getManager()
+                         ->getRepository('MgnCoreBundle:Config')
+                         ->findOneBy(array('cms' => 'mutagene'));
 
-		// On vérifie qu'elle est de type « AJAX ».
-	    if($request->isXmlHttpRequest())
+        $em = $this->container->get('doctrine')->getManager();
+
+        $article2 = clone $article;
+
+        $article->setUrl($article->getSlug());
+
+        $form = $this->createForm(new ArticlePublishType, $article);
+
+        // On récupère le formulaire et on le traite
+		$request = $this->get('request');
+
+		// On vérifie qu'elle est de type « POST ».
+	    if( $request->getMethod() == 'POST' )
 	    {
-	    	$em = $this->container->get('doctrine')->getManager();
+	        // On fait le lien Requête <-> Formulaire.
+	        $form->bind($request);
+	
+	        // On vérifie que les valeurs rentrées sont correctes.
+	        if( $form->isValid() )
+	        {
+	            // On l'enregistre notre objet $article dans la base de données.
+	            $em = $this->getDoctrine()->getManager();
 
-		    $em->remove($contents);
-			$em->flush();
+	            if ($article->getUrl() == null)
+	            {
+	            	$article->setUrl($article->getTitle());
+	            }
 
-	        $return=array("responseCode"=>200, "id"=>$content);
-			$return=json_encode($return);//jscon encode the array
-   			return new Response($return,200,array('Content-Type'=>'application/json'));
-		}
-		
-	}
+	            // Gestion du comptage pour les auteurs des articles
+				if ($article2->getAuthor() == $article->getAuthor())
+				{
+					if ($article2->getStatus() == 'publish' AND $article->getStatus() != 'publish')
+					{
+						$countArticle = $article->getAuthor()->getCountArticle();
+						$article->getAuthor()->setCountArticle($countArticle-1);
+					}
+					elseif ($article2->getStatus() != 'publish' AND $article->getStatus() == 'publish')
+					{
+						$countArticle = $article->getAuthor()->getCountArticle();
+						$article->getAuthor()->setCountArticle($countArticle+1);
+					}
+				}
+				else
+				{
+					if ($article2->getStatus() == 'publish')
+					{
+						$countArticle = $article2->getAuthor()->getCountArticle();
+						$article2->getAuthor()->setCountArticle($countArticle-1);
+					}
 
-	public function contentsSortableAction()
-	{
-		// On récupère les entitées dont on aura besoin
-        $request = $this->get('request');
+					if ($article->getStatus() == 'publish')
+					{
+						$countArticle = $article->getAuthor()->getCountArticle();
+						$article->getAuthor()->setCountArticle($countArticle+1);
+					}
+				}	
 
-		// On vérifie qu'elle est de type « AJAX ».
-	    if($request->isXmlHttpRequest())
-	    {
-	    	$em = $this->container->get('doctrine')->getManager();
+				// Gestion du comptage dans les catégories d'article
+				if ($article2->getCategory() == $article->getCategory())
+				{
+					if ($article2->getStatus() == 'publish' AND $article->getStatus() != 'publish')
+					{
+						$countNews = $article->getCategory()->getCountNews();
+						$article->getCategory()->setCountNews($countNews-1);
+					}
+					elseif ($article2->getStatus() != 'publish' AND $article->getStatus() == 'publish')
+					{
+						$countNews = $article->getCategory()->getCountNews();
+						$article->getCategory()->setCountNews($countNews+1);
+					}
+				}
+				else
+				{
+					if ($article2->getStatus() == 'publish')
+					{
+						$countNews = $article2->getCategory()->getCountNews();
+						$article2->getCategory()->setCountNews($countNews-1);
+					}
 
-	    	$order = explode(',', $request->request->get('order'));
-	    	//$order = explode(',', $_POST['order']);
+					if ($article->getStatus() == 'publish')
+					{
+						$countNews = $article->getCategory()->getCountNews();
+						$article->getCategory()->setCountNews($countNews+1);
+					}
+				}
 
-	    	
-		    	$counter = 0;
-			    foreach ($order as $item_id) {
-		    		$content = $this->getDoctrine()
-		                      	 ->getManager()
-		                      	 ->getRepository('MgnArticleBundle:Contents')
-		                      	 ->find($item_id);
+				// Gestion du comptage total des articles
+				if ($article2->getStatus() != $article->getStatus())
+				{
+					
+				}
 
-	                $content->setPosition($counter);
-					$em->persist($content);
-					$em->flush();
+				$em->persist($article);
+				$em->flush();
+				
+				//message de confirmation
+				$this->get('session')->getFlashBag()->add('success', 'Votre article à bien été publié.');
+				
+				// On redirige vers la page d'accueil, par exemple.
+	            return $this->redirect( $this->generateUrl('mgn_admin_article_list'));
+	        }
+	    }
 
-			        $counter++;
-			    }
-
-			    $return=array("responseCode"=>200, "info"=>"success");
-				$return=json_encode($return);//jscon encode the array
-	   			return new Response($return,200,array('Content-Type'=>'application/json'));
-		}
-		else
-		{
-			$return=array("responseCode"=>400, "info"=>"non isXmlHttpRequest");
-			$return=json_encode($return);//jscon encode the array
-			return new Response($return,400,array('Content-Type'=>'application/json'));
-		}
+        return $this->render('MgnArticleBundle:Admin:publish.html.twig', array(
+            'form' => $form->createView(),
+            'article' => $article,
+            //'categories' => $categories,
+		));
 	}
 }

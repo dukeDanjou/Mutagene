@@ -71,20 +71,8 @@ mgn_admin_article_edit_introduction:
     requirements:
         article:  \d+
 
-mgn_admin_article_contents:
-    pattern:   /admin/article/contents/{article}/{content}/{type}/{action}
-    defaults:  { _controller: MgnArticleBundle:Admin:contents, action: null }
-    requirements:
-        id:  \d+
-
-mgn_admin_article_contents_delete:
-    pattern:   /admin/article/contentsdelete/{content}
-    defaults:  { _controller: MgnArticleBundle:Admin:contentsDelete }
-    requirements:
-        id:  \d+
-
-mgn_admin_article_contents_sortable:
-    pattern:   /admin/article/contentssortable
-    defaults:  { _controller: MgnArticleBundle:Admin:contentsSortable }
+mgn_admin_article_publish:
+    pattern:   /admin/article/publier/{id}
+    defaults:  { _controller: MgnArticleBundle:Admin:publish }
     requirements:
         id:  \d+

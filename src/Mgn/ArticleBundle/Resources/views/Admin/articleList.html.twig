@@ -99,7 +99,7 @@
 				                    	<h5><a href="{{ path('mgn_admin_article_edition', {'id': article.id}) }}"><strong>{{ article.title }}</strong></a>{% if article.status == 0 %}<small> - Brouillon</small>{% endif %}</h5>
 				                    	<span class="hidde">
 				                    		<small>
-				                    			<a href="{{ path('mgn_admin_article_edition', {'id': article.id}) }}">Modifier</a> | <a href="#modalDelete{{ article.id }}" role="button" class="text-danger" data-toggle="modal">Mettre à la corbeille</a> | {% if article.status == 0 %}Aperçu{% else %}Afficher{% endif %}
+				                    			<a href="{{ path('mgn_admin_article_edition', {'id': article.id}) }}">Modifier</a> | <a href="#modalDelete{{ article.id }}" role="button" class="text-danger" data-toggle="modal">Mettre à la corbeille</a>
 				                    		</small>
 				                    	</span>
 				                    </td>
