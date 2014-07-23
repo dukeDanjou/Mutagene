@@ -23,12 +23,7 @@
 
 			</section>
 
-			<div class="alert alert-success">
-	        	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-	            Cliquez sur un élément pour le modifier.
-	        </div>
-
-			<section id="" class="panel">
+			<section class="panel">
 
 				<div class="panel-body">
 
@@ -67,7 +62,7 @@
 	            <div class="col-lg-12">
 
 	                <div id="contents-load" data-path="{{path('mgn_content_sortable')}}">
-	                	
+
 	                	{% for content in article.contents %}
 
 	                		{% if content.type == 'paragraph' %}
